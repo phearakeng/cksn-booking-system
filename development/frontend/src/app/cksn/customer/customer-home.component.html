@@ -1,0 +1,109 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12  p-0 m-0">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-start">
+              <h4 class="subHeaderTitle" class="text-info font-weight-bold">CUSTOMER SUMARY</h4>
+              <div>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="text-info mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button [disabled]="!permission.isAdd" mat-menu-item (click)="onClick_New()">
+                    <mat-icon class="text-info">add</mat-icon>
+                    <span class="text-info">New</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <!--==========|SEARCH|=========-->
+                <mat-form-field class="fullWidth">
+                  <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                  <mat-label class="text-info font-weight-normal">Search</mat-label>
+                  <input matInput type="text" name="criterial" (keyup)="applyFilter($event.target.value)"
+                    [(ngModel)]="criterial" class="text-success">
+                  <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="criterial=''">
+                    <mat-icon class="text-danger" (click)="onClick_RemoveSearch()">clear</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <!--==========|PAGINATOR|=========-->
+              <div class="col-md-10">
+                <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                  (page)="paginatorEvent($event)">
+                </mat-paginator>
+              </div>
+            </div>
+
+            <div class="tbl-container table-responsive ">
+              <table mat-table #tblCustomer [(dataSource)]="dataSourceCustomer">
+                <!-- CUSTOMER COLUMN -->
+                <ng-container matColumnDef="Customer">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> CUSTOMER </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <!-- PHONE NUMBER ONE COLUMN -->
+                <ng-container matColumnDef="Phone1">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> PHONE NUMBER-1 </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.telephone1}} </td>
+                </ng-container>
+
+                <!-- PHONE NUMBER TWO COLUMN -->
+                <ng-container matColumnDef="Phone2">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> PHONE NUMBER-2 </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.telephone2}} </td>
+                </ng-container>
+
+                <!-- EMAIL COLUMN -->
+                <ng-container matColumnDef="Email">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> EMAIL </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.email1}} </td>
+                </ng-container>
+
+                <!-- ADDRESS COLUMN -->
+                <ng-container matColumnDef="Address">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> ADDRESS </th>
+                  <td mat-cell matRipple *matCellDef="let element">
+                    {{element.address1.length>=10?element.address1.substr(0,10)+'...':element.address1}} </td>
+                </ng-container>
+
+                <!-- ACTION COLUMN -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> ACTION </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="d-flex justify-content-center">
+
+
+                      <!-- EDIT COLUMN -->
+                      <button mat-raised-button type="button" (click)="onClick_edit(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isUpdate" class="btn btn-success btn-link p-1 m-0">
+                        <i class="material-icons">edit</i>
+                      </button>
+
+                      <!-- REMOVE COLUMN -->
+                      <button mat-raised-button type="button" (click)="onClick_remove(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isDelete" class="btn btn-danger btn-link p-0 m-0">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

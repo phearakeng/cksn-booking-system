@@ -1,0 +1,39 @@
+.customerName {
+    margin-bottom: 0rem;
+}
+
+.place,
+phone {
+    margin-bottom: 0rem;
+    color: grey;
+    font-size: 12px;
+}
+
+.placeIconSize {
+    font-size: 14px !important;
+}
+
+.phoneIconSize {
+    font-size: 14px !important;
+}
+
+table {
+    width: 100%;
+}
+
+.tbl-container {
+    height: 500px;
+    overflow: auto;
+}
+
+th {
+    background: #18d1de;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+mat-cell,
+td {
+    font-weight: 400;
+}

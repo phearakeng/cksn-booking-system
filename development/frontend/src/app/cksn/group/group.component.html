@@ -1,0 +1,77 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-start">
+                <h4 class="subHeaderTitle text-info font-weight-bold">GROUP SUMARY</h4>
+                <div>
+                  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <mat-icon class="text-info mb-2">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button [disabled]="!permission.isAdd" mat-menu-item (click)="onClick_New()">
+                      <mat-icon class="text-info">add</mat-icon>
+                      <span class="text-info">New</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 mrtb-0 pltb-0">
+                  <mat-form-field class="fullWidth">
+                    <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                    <mat-label class="text-info font-weight-normal">Search</mat-label>
+                    <input matInput type="text" name="criterial" class="text-success"
+                      (keyup)="applyFilter($event.target.value)" [(ngModel)]="criterial">
+                    <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="criterial=''">
+                      <mat-icon class="text-danger" (click)="onClick_RemoveSearch()">clear</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-10">
+                  <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                    (page)="paginatorEvent($event)">
+                  </mat-paginator>
+                </div>
+              </div>
+              <div class="tbl-container table-responsive">
+                <table mat-table #tblGroup [(dataSource)]="dataSourceGroup">
+                  <ng-container matColumnDef="ID">
+                    <th mat-header-cell class="text-light" *matHeaderCellDef> ID </th>
+                    <td mat-cell matRipple *matCellDef="let element"> {{element.ID}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Group">
+                    <th mat-header-cell class="text-light" *matHeaderCellDef> Group </th>
+                    <td mat-cell matRipple *matCellDef="let element"> {{element.group}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Status">
+                    <th mat-header-cell class="text-light" *matHeaderCellDef> status </th>
+                    <td mat-cell matRipple *matCellDef="let element"> {{element.status}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell class="text-light" *matHeaderCellDef> action </th>
+                    <td mat-cell *matCellDef="let element">
+
+                      <button mat-raised-button type="button" (click)="onClick_edit(element)"
+                        class="btn btn-success btn-link">
+                        <i class="material-icons">edit</i>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>

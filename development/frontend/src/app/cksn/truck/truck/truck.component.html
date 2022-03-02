@@ -1,0 +1,89 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-start">
+              <h4 class="subHeaderTitle text-info font-weight-bold">TRUCK</h4>
+              <div>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button [disabled]="!permission.isAdd" mat-menu-item (click)="onClick_New()">
+                    <mat-icon class="text-info">add</mat-icon>
+                    <span class="text-info">New</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 mrtb-0 pltb-0">
+                <mat-form-field class="fullWidth">
+                  <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                  <mat-label class="text-info font-weight-normal">Search</mat-label>
+                  <input matInput type="text" placeholder="Search" name="criterial"
+                    class="text-success font-weight-bold" (keyup)="applyFilter($event.target.value)"
+                    [(ngModel)]="criterial">
+                  <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="criterial=''">
+                    <mat-icon class="text-danger font-weight-bold" (click)="onClick_Clear_Value_Search()">clear
+                    </mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                  (page)="paginatorEvent($event)">
+                </mat-paginator>
+              </div>
+            </div>
+            <div class="tbl-container table-responsive">
+              <table mat-table #tblTruck [(dataSource)]="dataSourceTruck">
+                <ng-container matColumnDef="Model">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> MODEL </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.model}} </td>
+                </ng-container>
+                <ng-container matColumnDef="AssetOf">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> ASSETS OF </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.assetOf}} </td>
+                </ng-container>
+                <ng-container matColumnDef="Name">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> NAME </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.bizID!=null?element.bizPartner.name:''}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Weight">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> WEIGHT </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.weight}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PlateNo">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> PLATE NO </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.plateNo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> ACTION </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button type="button" (click)="onClick_edit(element)"
+                    class="btn btn-success btn-link">
+                    <i class="material-icons">edit</i>
+                  </button>
+                  <button mat-raised-button type="button" (click)="onClick_remove(element)" *ngIf="permission!=null"
+                    [hidden]="!permission.isDelete" class="btn btn-danger btn-link p-0 m-0">
+                    <i class="material-icons">delete</i>
+                  </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

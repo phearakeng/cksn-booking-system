@@ -1,0 +1,89 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12  p-0 m-0">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-start">
+              <h4 class="subHeaderTitle text-info font-weight-bold">BUSINESS</h4>
+              <div>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button [disabled]="!permission.isAdd" (click)="onClick_new()" mat-menu-item>
+                    <mat-icon class="text-info">add</mat-icon>
+                    <span class="text-info">New</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 mrtb-0 pltb-0">
+                <mat-form-field class="fullWidth">
+                  <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                  <mat-label class="text-info font-weight-normal">Search</mat-label>
+                  <input matInput type="text" name="criterial"
+                    (keyup)="applyFilter($event.target.value)" [(ngModel)]="criterial">
+                  <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="criterial=''">
+                    <mat-icon class="text-danger" (click)="onClick_Clear_Value_Of_Search()">clear</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                  (page)="paginatorEvent($event)">
+                </mat-paginator>
+              </div>
+            </div>
+            <div class="tbl-container table-responsive">
+              <table mat-table #tblBusinessPartner [(dataSource)]="dataSourceBusinessPartner">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="NAME">
+                  <th mat-header-cell class="text-light font-weight-bold h6 " *matHeaderCellDef> NAME </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="COMPANY">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> COMPANY </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.company}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="TELEPHONE">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> TELEPHONE </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.telephone}} </td>
+                </ng-container>
+                <ng-container matColumnDef="EMAIL">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> EMAIL </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.email}} </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell class="text-light font-weight-bold h6" *matHeaderCellDef> action </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="d-flex justify-content-center">
+                      <button mat-raised-button type="button" (click)="onClick_Edit(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isUpdate" class="btn btn-success btn-link p-1 m-0">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button mat-raised-button type="button" (click)="onClick_remove(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isDelete" class="btn btn-danger btn-link p-0 m-0">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

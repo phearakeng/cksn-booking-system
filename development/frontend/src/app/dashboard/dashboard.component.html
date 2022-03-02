@@ -1,0 +1,104 @@
+<div class="main-content">
+  <div *ngIf="isViewAble">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon" style="padding-top:26px">
+              <div class="card-icon">
+                <img src="/assets/img/product_item.png" width="60px" height="55px">
+              </div>
+              <p class="card-category" style="font-weight: bold;">Bookings</p>
+              <h3 class="card-title">{{bookingNumber}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-rose card-header-icon" style="padding-top:26px">
+              <div class="card-icon">
+                <img src="/assets/img/ic_cargo.png" width="60px" height="55px">
+              </div>
+              <p class="card-category" style="font-weight: bold;">Containers</p>
+              <h3 class="card-title">{{containerNumber}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon" style="padding-top:26px">
+              <div class="card-icon">
+                <img src="/assets/img/ic_delivered.png" width="60px" height="55px">
+              </div>
+              <p class="card-category" style="font-weight: bold;">Delivered</p>
+              <h3 class="card-title">{{deliveredNumber}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6  mt-4">
+          <div class="card">
+            <div class="card-header card-header-success card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons"></i>
+              </div>
+              <h4 class="card-title">Booking In Month</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Status</th>
+                          <th>Number</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="tableData3!=undefined">
+                          <tr class="table-info">
+                            <td *ngFor="let cell of tableData3.dataRows[0]">{{cell}}</td>
+                          </tr>
+                          <tr class="table-warning">
+                            <td *ngFor="let cell of tableData3.dataRows[1]">{{cell}}</td>
+                          </tr>
+                          <tr class="table-success">
+                            <td *ngFor="let cell of tableData3.dataRows[2]">{{cell}}</td>
+                          </tr>
+                          <tr class="table-danger">
+                            <td *ngFor="let cell of tableData3.dataRows[3]">{{cell}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6  mt-4">
+          <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+              <div class="card-icon">
+                <i class="material-icons">insert_chart</i>
+              </div>
+              <h4 class="card-title">Monthly Booking</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 ml-auto mr-auto">
+                  <div id="simpleBarChart" class="ct-chart" style="height: 260px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

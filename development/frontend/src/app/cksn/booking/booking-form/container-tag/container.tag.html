@@ -1,0 +1,428 @@
+<div class="row">
+  <div class="col">
+    <div class="tbContainer " id="table-scroll">
+      <table #table class="table table-responsive table-bordered table-data  tableFixHead" cellCursor="cc"
+        (onKeyPressEvent)="onKeyPressEvent($event)" (onDataPaste)="onDataPaste($event)">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" style="width:1%; text-align: center; " class="noselect">
+              No
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              Container No
+            </th>
+            <th class="noselect" style="text-align: center; ">
+              Quantity
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              QTY Type
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              Container Size
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              GW
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              GW Type
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              CBM
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">
+              CBM Type
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">Pick Up Date Time
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">Delivery Date Time
+            </th>
+            <th scope="col" style="text-align: center; " class="noselect">Drop Of Depo</th>
+            <th scope="col" style="text-align: center; " class="noselect">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- **************{-FORM INPUT OF TABLE-}************** -->
+          <tr (click)="ifOnClick">
+            <td></td>
+
+            <!--=====[ CTN NO ]=====-->
+            <td class="p-0">
+              <input matInput [(ngModel)]="containerNo" tabindex="1" class="text-success"
+                placeholder="Past Data Hear...">
+            </td>
+
+            <!--=====[ QTY ]=====-->
+            <td>
+              <input matInput type="text" (keypress)="numberOnly($event)" tabindex="2" [(ngModel)]="quantity">
+            </td>
+
+            <!--=====[ QUANTITY TYPE ]=====-->
+            <td>
+              <mat-select [(ngModel)]="quantityUnitTypeID" name="quantityUnitType" tabindex="3">
+                <mat-option *ngFor="let quantityUnitType of quantityUnitTypeList" [value]="quantityUnitType.ID">
+                  {{quantityUnitType.value}}</mat-option>
+              </mat-select>
+            </td>
+
+            <!--=====[ CONTAINER SIZE ]=====-->
+            <td style="width: 200px;">
+              <mat-select [(ngModel)]="containerSize" name="containerSize" tabindex="4">
+                <mat-option *ngFor="let containerSize of containerSizeList" [value]="containerSize.value">
+                  {{containerSize.value}}</mat-option>
+              </mat-select>
+            </td>
+
+            <!--=====[ GW ]=====-->
+            <td>
+              <input matInput type="number" (keypress)="numberOnly($event)" [(ngModel)]="gw" tabindex="5">
+            </td>
+
+            <!--=====[ GW TYPE ]=====-->
+            <td>
+              <mat-select [(ngModel)]="gwUnitTypeID" name="gwUnitType" tabindex="6">
+                <mat-option *ngFor="let gwUnitType of gwUnitTypeList" [value]="gwUnitType.ID">
+                  {{gwUnitType.value}}</mat-option>
+              </mat-select>
+            </td>
+
+            <!--=====[ CBM ]=====-->
+            <td>
+              <input matInput [(ngModel)]="cbm" (keypress)="numberOnly($event)" type="number" tabindex="7">
+            </td>
+
+            <!--=====[ CBM TYPE ]=====-->
+            <td>
+              <mat-select [(ngModel)]="cbmUnitTypeID" name="cbmUnitType" tabindex="8">
+                <mat-option *ngFor="let cbmUnitType of cbmUnitTypeList" [value]="cbmUnitType.ID">
+                  {{cbmUnitType.value}}</mat-option>
+              </mat-select>
+            </td>
+
+            <!--=====[ PICK UP DATE TIME ]=====-->
+            <td style="width: 350px;">
+              <input type="datetime-local" matInput id="pickupDate" name="pickupDate" [(ngModel)]="pickupDate">
+            </td>
+
+            <!--=====[ DELIVERY DATE TIME ]=====-->
+            <td class="p-0" style="width: 350px;">
+              <input type="datetime-local" matInput id="conDeliveryDate" name="conDeliveryDate"
+                [(ngModel)]="conDeliveryDate">
+            </td>
+
+            <!--=====[ DROP OF DEPO ]=====-->
+            <td>
+              <input id="emptyDepo" name="emptyDepo" [(ngModel)]="emptyDepo" matInput tabindex="11">
+            </td>
+
+            <!--=====[ BTN SAVE ]=====-->
+            <td class="no_color_no_border">
+              <button style="left: -12px;" mat-raised-button type="button" (click)="onClick_AddContainer()"
+                matTooltip="Save" class="btn btn-success btn-sm  p-1 m-1 ml-3">
+                <i class="material-icons">save</i> Save
+              </button>
+            </td>
+          </tr>
+
+          <!--=====[ MULTI DROP ]=====-->
+          <tr *ngFor="let row of dataSource;let i = index">
+            <td (click)="onClick_opernMultiDelivery(row)">
+              <div class="noselect text-center pointer drag-handler">
+                {{i+1}} </div>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center pointer drag-handler">
+                  {{row.containerNo}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input matInput [(ngModel)]="row.containerNo" id="ctn" tabindex="11" (keyup.enter)="onEnter(row)"
+                  [ngModelOptions]="{standalone: true}" />
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.quantity | number}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input matInput type="text" tabindex="12" (keypress)="numberOnly($event)" [(ngModel)]="row.quantity"
+                  (keyup.enter)="onEnter(row)" [ngModelOptions]="{standalone: true}" />
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.quantityUnitType?row.quantityUnitType.value:''}}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <mat-select [(ngModel)]="row.quantityUnitTypeID" tabindex="13" (keyup.enter)="onEnter(row)"
+                  [ngModelOptions]="{standalone: true}">
+                  <mat-option *ngFor="let qty of quantityUnitTypeList" [value]="qty.ID">
+                    {{qty.value}}</mat-option>
+                </mat-select>
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.containerSize}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <mat-select [(ngModel)]="row.containerSize" (keyup.enter)="onEnter(row)" tabindex="14"
+                  [ngModelOptions]="{standalone: true}">
+                  <mat-option *ngFor="let containerSize of containerSizeList" [value]="containerSize.value">
+                    {{containerSize.value}}</mat-option>
+                </mat-select>
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.gw | number}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input matInput type="number" (keypress)="numberOnly($event)" [(ngModel)]="row.gw" tabindex="15"
+                  [ngModelOptions]="{standalone: true}" />
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.gwUnitType?row.gwUnitType.value:""}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <mat-select [(ngModel)]="row.gwUnitTypeID" (keyup.enter)="onEnter(row)" tabindex="16"
+                  [ngModelOptions]="{standalone: true}">
+                  <mat-option *ngFor="let gwUnitType of gwUnitTypeList" [value]="gwUnitType.ID">
+                    {{gwUnitType.value}}</mat-option>
+                </mat-select>
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.cbm | number}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input matInput type="number" (keypress)="numberOnly($event)" [(ngModel)]="row.cbm" tabindex="17"
+                  [ngModelOptions]="{standalone: true}" />
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.cbmUnitType?row.cbmUnitType.value:""}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <mat-select [(ngModel)]="row.cbmUnitTypeID" (keyup.enter)="onEnter(row)" tabindex="18"
+                  [ngModelOptions]="{standalone: true}">
+                  <mat-option *ngFor="let cbmUnitType of cbmUnitTypeList" [value]="cbmUnitType.ID">
+                    {{cbmUnitType.value}}</mat-option>
+                </mat-select>
+              </ng-container>
+            </td>
+            <td style="width: 405px;" (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==true">
+                <input type="datetime-local" matInput name="pickupDate"
+                  [value]="row.pickUpDate | dateFilter:'dd/MM/yyyy hh:mm a'" [(ngModel)]="row.pickUpDate" />
+              </ng-container>
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.pickUpDate | date: 'dd/MM/yyyy hh:mm a'}} </div>
+              </ng-container>
+            </td>
+            <td style="width: 405px;" (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center"> {{row.deliveryDate | date: 'dd/MM/yyyy hh:mm a'}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input type="datetime-local" matInput name="deliveryDate" [(ngModel)]="row.deliveryDate"
+                  [value]="row.deliveryDate | dateFilter:'dd/MM/yyyy hh:mm a'" />
+              </ng-container>
+            </td>
+            <td (dblclick)="onEditEven(row)" (click)="onCellClick(row)">
+              <ng-container *ngIf="row.editing==undefined || row.editing==false">
+                <div class="noselect text-center pointer">
+                  {{row.emptyDepo}} </div>
+              </ng-container>
+              <ng-container *ngIf="row.editing==true">
+                <input matInput [(ngModel)]="row.emptyDepo" (keyup.enter)="onEnter(row)"
+                  [ngModelOptions]="{standalone: true}" />
+              </ng-container>
+            </td>
+            <td class="no_color_no_border">
+              <button style="left: -12px;" class="text-center" mat-raised-button type="button"
+                matTooltip="Remove container" (click)="onClick_deleteContainer(row)"
+                class="btn btn-danger btn-sm  p-1 m-1 ml-3">
+                <i class="material-icons">delete</i>
+              </button>
+            </td>
+          </tr>
+
+        </tbody>
+        <tfoot style="width: auto;">
+          <tr class="table-primary" style="border: none !important;">
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+            <td style="width: 150px;">Total QTY = {{totalQuantity}}</td>
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+            <td style="width: 150px;">Total GW = {{totalGW}}</td>
+            <td class="no_color_no_border"></td>
+            <td style="width: 150px;">Total CBM = {{totalCBM}}</td>
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+            <td class="no_color_no_border"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MULTIPLE DELIVERY -->
+<div class="modal fade  modal-primary" id="multiDropDialog" role="dialog" aria-labelledby="multiDropDialog"
+  aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 70% !important; ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-info">Multiple Drop Container ( Container No : <strong
+            class="text-primary font-weight-bold"> {{containerNoCP}}</strong> )</h4>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+
+      <!--=====|MUTITY =DROP DIALOG|=====-->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12 col-cl-12">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" style="text-align: center; width: 3%;">No</th>
+                    <th scope="col" style="text-align: center;">
+                      Contact Name
+                    </th>
+                    <th scope="col" style="text-align: center;">
+                      Phone Contact
+                    </th>
+                    <th scope="col" style="text-align: center;">
+                      Address
+                    </th>
+                    <th scope="col" style="text-align: center;">
+                      Delivery Date Time
+                    </th>
+                    <th scope="col" style="text-align: center;">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td class="p-0">
+                      <input matInput [(ngModel)]="contactName" class="text-success">
+                    </td>
+                    <td class="p-0">
+                      <input matInput [(ngModel)]="phoneContact" class="text-success">
+                    </td>
+                    <td class="p-0">
+                      <input matInput [(ngModel)]="deliveryAddress" class="text-success">
+                    </td>
+                    <td class="p-0">
+                      <input type="datetime-local" matInput name="multipleDeliverDate" class="text-success"
+                        [(ngModel)]="multipleDeliverDate"
+                        [value]="multipleDeliverDate | dateFilter:'dd/MM/yyyy hh:mm a'" />
+                    </td>
+
+                    <td class="no_color_no_border">
+                      <button style="left: -12px;" mat-raised-button type="button" (click)="onClick_AddMultiDelivery()"
+                        class="btn btn-success btn-sm  p-1 m-1 ml-3">
+                        <i class="material-icons">save</i> Save
+                      </button>
+                    </td>
+
+                  </tr>
+                  <tr *ngFor="let row of multiDeliverys;let i = index">
+                    <td>{{i+1}}</td>
+                    <td>
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="text-center pointer" data-toggle="modal"> {{row.contactName}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.contactName"
+                          class="text-center" [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="text-center pointer" data-toggle="modal"> {{row.phoneContact}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.phoneContact"
+                          class="text-center" [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="text-center pointer" data-toggle="modal"> {{row.address}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.address" class="text-center"
+                          [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td style="width: 220px;">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="text-center pointer" data-toggle="modal"> {{row.deliveryDate | date: 'dd/MM/yyyy
+                          hh:mm a'}}
+                        </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <!-- <input [owlDateTime]="deliverDateCTRLEdit"
+                          [(ngModel)]="editCacheMultiDelivery[row.key].data.deliveryDate"
+                          placeholder="{{editCacheMultiDelivery[row.key].data.deliveryDate}}"
+                          (focus)="deliverDateCTRLEdit.open()" name="deliveryTimeArrival" matInput
+                          [min]="minMultiDropDate" [owlDateTimeTrigger]="deliverDateCTRLEdit">
+
+                        <owl-date-time  #deliverDateCTRLEdit></owl-date-time> -->
+
+                        <!-- <input class="shadow-input" matInput
+                          [(ngModel)]="editCacheMultiDelivery[row.key].data.deliveryDate"
+                          [owlDateTime]="deliverDateCTRLEdit">
+
+                        <input type="text" [owlDateTimeTrigger]="deliverDateCTRLEdit" matInput [min]="minMultiDropDate"
+                          [value]="editCacheMultiDelivery[row.key].data.deliveryDate | dateFilter:'dd/MM/yyyy hh:mm a'">
+
+                        <owl-date-time [hour12Timer]="true" #deliverDateCTRLEdit></owl-date-time> -->
+
+                        <input type="datetime-local" matInput
+                          [(ngModel)]="editCacheMultiDelivery[row.key].data.deliveryDate"
+                          [value]="editCacheMultiDelivery[row.key].data.deliveryDate | dateFilter:'dd/MM/yyyy hh:mm a'" />
+                      </ng-container>
+                    </td>
+                    <td class="no_color_no_border">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <button mat-raised-button type="button" (click)="startEditMultiDelivery(row.key)"
+                          mat-raised-button type="button" class="btn btn-success btn-sm  p-1 m-1">
+                          <i class="material-icons">edit</i>Edit
+                        </button>
+                        <button mat-raised-button type="button" (click)="onClick_deleteMultiDelivery(row)"
+                          mat-raised-button type="button" class="btn btn-danger btn-sm  p-1 m-0">
+                          <i class="material-icons">delete</i>Remove
+                        </button>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <button mat-raised-button type="button" (click)="onClick_saveEditMultiDelivery(row.key)"
+                          mat-raised-button type="button" class="btn btn-primary btn-round btn-sm p-1 m-1">
+                          <i class="material-icons">save</i>
+                        </button>
+                      </ng-container>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

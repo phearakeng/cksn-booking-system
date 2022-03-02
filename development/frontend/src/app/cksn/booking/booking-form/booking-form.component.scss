@@ -1,0 +1,193 @@
+.input_fileupload--hidden {
+  display: none;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.documentContainer {
+  height: 200px;
+  // overflow: scroll;
+}
+
+.no_color_no_border {
+  border: none !important;
+  background-color: white !important;
+}
+
+a {
+  cursor: pointer;
+
+}
+
+a:hover {
+  color: blue
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  color: blue
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+.example-container {
+  overflow-x: auto;
+  height: 500px;
+}
+
+.lineBetween {
+  font-weight: bold;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lineBetween:before,
+.lineBetween:after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.lineBetween:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.lineBetween:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
+
+.link {
+  cursor: pointer;
+
+}
+
+.link:hover {
+  color: blue;
+}
+
+a:hover {
+  color: blue
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  color: blue
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+td {
+  padding: 0px !important;
+}
+
+th {
+  font-size: 12px !important;
+}
+
+.thMDrop,
+.tdMDrop {
+  width: auto;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 999999 !important;
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.cdk-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 9999999 !important;
+}
+
+.cdk-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999999 !important;
+  pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0;
+}
+
+.truncate-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep div.mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+tr {
+  width: 100%;
+}
+
+table {
+  display: -moz-groupbox;
+}
+
+tbody {
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.tbContainer {
+  width: 100%;
+  margin: 0 auto;
+  // overflow-x: scroll;
+}
+
+.shadow-input {
+  position: absolute;
+  top: 22px;
+  width: 0px;
+  height: 0px;
+  border: none;
+}
+
+span.remove-date {
+  position: absolute;
+  right: 16px;
+  top: 0px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mat-icon {
+  color: #0BC6DD;
+  font-size: 20px;
+}

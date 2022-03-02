@@ -1,0 +1,48 @@
+<div class="modal fade  modal-primary" id="importDropDialog" role="dialog" aria-labelledby="multiDropDialog"
+    aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 40% !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="text-primary">Fleet Data Import</span>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                        class="material-icons">clear</i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- <input type="file" matInput name="Upload CSV" id="txtFileUpload" (change)="uploadData($event)" accept=".csv" />   -->
+
+                        <input class="form-control" #myInput (change)="onFileChange($event)" matInput type="file"
+                            accept=".csv" form id="formFile">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <ng-container *ngIf="impSuccess > 0">
+                        <div class="col-sm-4 text-success">Success : {{impSuccess}} Records</div>
+                    </ng-container>
+                    <ng-container *ngIf="impFail > 0">
+                        <div class="col-sm-7 text-danger">Failed : {{impFail}} Records
+                            <span class="text-info" style="cursor: pointer;" (click)="exportEvent()">(Download
+                                Report)</span></div>
+                    </ng-container>
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <ng-container *ngIf="importStatus==false">
+                    <button mat-raised-button type="button" (click)="onImport()" class="btn btn-success ">Import
+                        <div class="ripple-container"></div>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="importStatus==true">
+                    <button class="btn btn-success" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Importing...
+                    </button>
+                </ng-container>
+
+
+            </div>
+        </div>
+    </div>
+</div>

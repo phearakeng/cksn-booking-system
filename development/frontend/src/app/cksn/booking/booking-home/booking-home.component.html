@@ -1,0 +1,192 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12  p-0 m-0">
+        <div class="card">
+          <div class="card-body" [hidden]="!invisbleLoading">
+            <div class="d-flex justify-content-start">
+              <h4 class="subHeaderTitle text-info font-weight-bold">BOOKING SUMARY</h4>
+              <div *ngIf="permission!=null" [hidden]="!permission.isView">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="subHeaderTitle text-info font-weight-bold mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button (click)="onClick_new()" *ngIf="permission!=null" [disabled]="!permission.isAdd" mat-menu-item>
+                    <mat-icon class="text-info">add</mat-icon>
+                    <strong class="text-info">New</strong>
+                  </button>
+                  <button mat-menu-item data-toggle="modal" data-target="#myModal10">
+                    <mat-icon class="text-info">voicemail</mat-icon>
+                    <strong class="text-info">Filter</strong>
+                  </button>
+                  <button mat-menu-item (click)="onClick_export()">
+                    <mat-icon class="text-info">backup</mat-icon>
+                    <strong class="text-info">Export</strong>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <mat-form-field class="fullWidth">
+                  <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                  <mat-label class="text-info font-weight-normal">Search</mat-label>
+                  <input matInput type="text" name="criterial" (keyup)="onTable_filter($event.target.value)"
+                    [(ngModel)]="criterial" class="text-success">
+                  <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="criterial=''">
+                    <mat-icon class="text-danger" (click)="onClick_RemoveSearch()">clear</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                  (page)="paginatorEvent($event)" showFirstLastButtons>
+                </mat-paginator>
+              </div>
+            </div>
+            <div class="tbl-container table-responsive ">
+              <mat-table #tblBooking [(dataSource)]="dataSourceBooking" matSort>
+
+                <!-- CODE COLUMN -->
+                <ng-container matColumnDef="CKSNFile">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header> Code </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"><span class="link"
+                      (click)="onClick_OpenBooking(element)">{{element.CKSNFile}}</span> </mat-cell>
+                </ng-container>
+
+                <!-- CLIENT COLUMN -->
+                <ng-container matColumnDef="Client">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header> Client </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.clientName}} </mat-cell>
+                </ng-container>
+
+                <!-- MBL COLUMN -->
+                <ng-container matColumnDef="MBL">
+                  <mat-header-cell mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>MBL
+                  </mat-header-cell>
+                  <mat-cell mat-cell matRipple *matCellDef="let element"> {{element.mbl}} </mat-cell>
+                </ng-container>
+
+                <!-- COMMODITY COLUMN -->
+                <ng-container matColumnDef="Commodity">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Commodity</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.commodity?element.commodity.length>14?element.commodity.substring(0,14)+'...':element.commodity.substring(0,14):''}}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- ETD POL COLUMN -->
+                <ng-container matColumnDef="ETD_POL">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header> ETD POL</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.etdPOL}} </mat-cell>
+                </ng-container>
+
+                <!-- ETA POD COLUMN -->
+                <ng-container matColumnDef="ETAPOD">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header> ETA POD </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.etaPOD}} </mat-cell>
+                </ng-container>
+
+                <!-- OPERATION COLUMN -->
+                <ng-container matColumnDef="Operation">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Operation</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.operation.lastName+' '+element.operation.firstName}} </mat-cell>
+                </ng-container>
+
+                <!-- ACTION COLUMN -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell class="text-light" *matHeaderCellDef> action </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <div class="d-flex justify-content-center">
+                      <button mat-raised-button type="button" (click)="onClick_edit(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isUpdate" class="btn btn-success btn-link p-1 m-0">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button mat-raised-button type="button" (click)="onClick_remove(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isDelete" class="btn btn-danger btn-link p-0 m-0">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row class="text-primary" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </div>
+          <div class="loader" [hidden]="invisbleLoading">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--=====[MODAL FILTER]=====-->
+<div class="modal fade modal-mini modal-primary" id="myModal10" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-bold">STATUS</mat-label>
+              <mat-select [(ngModel)]="filter.bookingStatusID">
+                <mat-option *ngFor="let bookingStatus of bookingStatuses" [value]="bookingStatus.ID"
+                  class="text-success">
+                  {{bookingStatus.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-normal">From Date: </mat-label>
+              <input matInput [(ngModel)]="filter.fromDate" (focus)="fromDatePciker.open()" class="text-success"
+                [matDatepicker]="fromDatePciker" name="fromDate">
+              <mat-datepicker-toggle matSuffix [for]="fromDatePciker"></mat-datepicker-toggle>
+              <mat-datepicker #fromDatePciker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-normal">To Date: </mat-label>
+              <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="filter.toDate" name="toDate"
+                class="text-success" (focus)="toDatePicker.open()">
+              <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #toDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-end">
+        <button mat-flat-button type="button" class="text-danger mr-2" data-dismiss="modal" (click)="onCancleFilter()">
+          <mat-icon class="text-danger">cancel_presentation</mat-icon> 
+          Cancel
+        </button>
+        <button mat-raised-button type="button" class="text-success mr-2" (click)="onFilter()">
+          <mat-icon class="text-success">filter_list</mat-icon> Filter
+        </button>
+        <button mat-raised-button class="text-info">
+          <mat-icon class="text-info">backup</mat-icon> Export
+        </button>
+        <div class="ripple-container"></div>
+      </div>
+    </div>
+  </div>
+</div>

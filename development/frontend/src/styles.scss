@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+// @import "~owl-ng/assets/style/theme.min.css";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+.card,
+.card-body {
+  height: 100% !important;
+}
+
+
+@media screen and (max-height: 1000px) {
+  .tbl-container {
+    height: 700px;
+    overflow: auto;
+  }
+}
+
+
+@media screen and (max-height: 900px) {
+  .tbl-container {
+    height: 500px;
+    overflow: auto;
+  }
+}
+
+
+@media screen and (min-height: 1200px) {
+  .tbl-container {
+    height: 900px;
+    overflow: auto;
+  }
+}
+
+
+.modal-backdrop {
+  z-index: -1 !important;
+}

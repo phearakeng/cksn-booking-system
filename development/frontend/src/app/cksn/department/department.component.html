@@ -1,0 +1,88 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-start">
+              <h4 class="subHeaderTitle text-info font-weight-bold">DEPARTMENT</h4>
+              <div>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button [disabled]="!permission.isAdd" mat-menu-item data-toggle="modal" data-target="#modalAdding">
+                    <mat-icon class="text-info">add</mat-icon>
+                    <span class="text-info">New</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="tbl-department table-responsive">
+              <table mat-table #tblDepartment [(dataSource)]="dataSourceDepartment">
+                <ng-container matColumnDef="Name">
+                  <th mat-header-cell class="text-light" *matHeaderCellDef> Name </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell class="text-light" *matHeaderCellDef> status </th>
+                  <td mat-cell matRipple *matCellDef="let element"> {{element.status=="1"?"active":"inactive"}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell class="text-light" *matHeaderCellDef> action </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button type="button" (click)="onClick_edit(element)"
+                      class="btn btn-success btn-link">
+                      <i class="material-icons">edit</i>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade modal-mini modal-primary" id="modalAdding" tabindex="-1" role="dialog"
+      aria-labelledby="modalAdding" aria-hidden="true">
+      <div class="modal-dialog modal-small">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                class="material-icons">clear</i></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Department</mat-label>
+                  <input matInput type="text" class="text-success" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="departmentField" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <section class="example-section">
+                  {{""+newDepartment.status=="1"?"active":"inactive"}}
+                  <mat-slide-toggle [checked]="newDepartment.status==1?true:false" (change)="change($event)">
+                  </mat-slide-toggle>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+            <button mat-raised-button type="button" (click)="addDepartment()" class="btn btn-success btn-link">Save
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>

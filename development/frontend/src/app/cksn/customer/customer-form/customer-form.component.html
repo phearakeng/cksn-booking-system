@@ -1,0 +1,251 @@
+<div class="container">
+    <div class="main-content" [hidden]="!permission.isView">
+        <div class="container-fluid">
+            <form [formGroup]="customerDetailForm">
+                <div class="card p-4">
+
+                    <div class="ml-4">
+                        <span class="text-info font-weight-bold">CUSTOMER FORM</span>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon class="text-info mb-1">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button [disabled]="!permission.isAdd"
+                                (click)="onSubmitCustomerDefail(customerDetailForm.value)"
+                                [disabled]="!customerDetailForm.valid" mat-menu-item>
+                                <mat-icon class="text-info">save</mat-icon>
+                                <span class="text-info">Save</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+
+                    <div class="card-body ">
+                        <div class="m-2">
+
+                            <!--=====|CLIENT TYPE|=====-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">CLIENT TYPE</mat-label>
+                                        <mat-select [formControl]="clientType" multiple required>
+                                            <mat-option *ngFor="let clientType of clientTypeList"
+                                                [value]="clientType.ID">
+                                                {{clientType.value}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="clientType.hasError('required')">Please Choose Client Type
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <!--=====|VAT NO|=====-->
+                                <div class="col-sm-6" [hidden]="!customer.isCustomer">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">VAT NO</mat-label>
+                                        <mat-icon matSuffix color="warn">format_list_numbered</mat-icon>
+                                        <input matInput [(ngModel)]="customer.VATNo" class="text-success"
+                                            formControlName="VATNo">
+                                        <mat-error *ngFor="let validation of validation_messages.VATNo">
+                                            <mat-error class="error-message"
+                                                *ngIf="customerDetailForm.get('VATNo').hasError(validation.type) && (customerDetailForm.get('VATNo').dirty || customerDetailForm.get('VATNo').touched)">
+                                                {{validation.message}}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--=====|COMPANY NAME|=====-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">NAME / COMPANY</mat-label>
+                                        <mat-icon matSuffix color="warn">domain</mat-icon>
+                                        <input matInput [(ngModel)]="customer.name" required class="text-success"
+                                            formControlName="name">
+                                        <mat-error *ngFor="let validation of validation_messages.name">
+                                            <mat-error class="error-message"
+                                                *ngIf="customerDetailForm.get('name').hasError(validation.type) && (customerDetailForm.get('name').dirty || customerDetailForm.get('name').touched)">
+                                                {{validation.message}}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <!--=====|NAME KHMER|=====-->
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">NAME KHMER</mat-label>
+                                        <mat-icon matSuffix color="warn">spellcheck</mat-icon>
+                                        <input matInput [(ngModel)]="customer.nameKH" class="text-success"
+                                            formControlName="nameKH">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--=====|TELEPHONE 1|=====-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">TELEPHONE 1</mat-label>
+                                        <mat-icon matSuffix color="warn">phone</mat-icon>
+                                        <input matInput [(ngModel)]="customer.telephone1"
+                                            pattern="^\+?[0-9]{3}-?[0-9]{6,12}$" class="text-success"
+                                            formControlName="telephone1">
+                                        <mat-error *ngFor="let validation of validation_messages.phone">
+                                            <mat-error class="error-message" class="error-message"
+                                                *ngIf="customerDetailForm.get('telephone1').hasError(validation.type) && (customerDetailForm.get('telephone1').dirty || customerDetailForm.get('telephone1').touched)">
+                                                {{ validation.message }}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <!--=====|TELEPHONE 2|=====-->
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">TELEPHONE 2 [Optional]
+                                        </mat-label>
+                                        <mat-icon matSuffix color="warn">phone</mat-icon>
+                                        <input matInput [(ngModel)]="customer.telephone2" class="text-success"
+                                            pattern="^\+?[0-9]{3}-?[0-9]{6,12}$" value="" formControlName="telephone2">
+                                        <mat-error *ngFor="let validation of validation_messages.phone">
+                                            <mat-error class="error-message" class="error-message"
+                                                *ngIf="customerDetailForm.get('telephone2').hasError(validation.type) && (customerDetailForm.get('telephone2').dirty || customerDetailForm.get('telephone2').touched)">
+                                                {{ validation.message }}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--=====|EMAIL 1|=====-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label class="text-info font-weight-normal">EMAIL-1</mat-label>
+                                        <mat-icon matSuffix color="warn">email</mat-icon>
+                                        <input matInput type="email" pattern="[^@\s]+@[^@\s]+" class="text-success"
+                                            [(ngModel)]="customer.email1" formControlName="email1">
+                                        <mat-error *ngFor="let validation of validation_messages.email">
+                                            <mat-error class="error-message" class="error-message"
+                                                *ngIf="customerDetailForm.get('email1').hasError(validation.type) && (customerDetailForm.get('email1').dirty || customerDetailForm.get('email1').touched)">
+                                                {{ validation.message }}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <!--=====|EMAIL 2|=====-->
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">EMAIL-2 [Optional]</mat-label>
+                                        <mat-icon matSuffix color="warn">email</mat-icon>
+                                        <input matInput type="email" pattern="[^@\s]+@[^@\s]+"
+                                            [(ngModel)]="customer.email2" formControlName="email2" class="text-success">
+                                        <mat-error *ngFor="let validation of validation_messages.email">
+                                            <mat-error class="error-message"
+                                                *ngIf="customerDetailForm.get('email2').hasError(validation.type) && (customerDetailForm.get('email2').dirty || customerDetailForm.get('email2').touched)">
+                                                {{validation.message}}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--=====|CONTACT NAME|=====-->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">CONTACT NAME</mat-label>
+                                        <mat-icon matSuffix color="warn">contact_mail</mat-icon>
+                                        <input matInput [(ngModel)]="customer.contactName" class="text-success"
+                                            formControlName="contactName">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">CONTACT PHONE</mat-label>
+                                        <mat-icon matSuffix color="warn">contact_phone</mat-icon>
+                                        <input matInput [(ngModel)]="customer.contactPhone" pattern="[0-9]"
+                                            class="text-success" formControlName="contactPhone">
+                                        <mat-error *ngFor="let validation of validation_messages.phone">
+                                            <mat-error class="error-message"
+                                                *ngIf="customerDetailForm.get('contactPhone').hasError(validation.type) && (customerDetailForm.get('contactPhone').dirty || customerDetailForm.get('contactPhone').touched)">
+                                                {{validation.message}}
+                                            </mat-error>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">COUNTRY</mat-label>
+                                        <mat-icon matSuffix color="warn">place</mat-icon>
+                                        <input type="text" formControlName="country" matInput class="text-success"
+                                            [matAutocomplete]="autoCountry">
+                                        <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountry"
+                                            (optionSelected)="onSelectionCountryChanged($event)">
+                                            <mat-option *ngFor="let country of filteredCountry | async"
+                                                [value]="country">
+                                                {{country.description}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <mat-label class="text-info font-weight-normal">COUNTRY CODE</mat-label>
+                                                <mat-icon matSuffix color="warn">security</mat-icon>
+                                                <input matInput [(ngModel)]="customer.countryCode" class="text-success"
+                                                    formControlName="countryCode" name="countryCode" id="countryCode">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <mat-label class="text-info font-weight-normal">CITY</mat-label>
+                                                <mat-icon matSuffix color="warn">location_city</mat-icon>
+                                                <input matInput [(ngModel)]="customer.city" formControlName="city"
+                                                    class="text-success" name="city" id="city">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="fullWidth">
+                                        <mat-label class="text-info font-weight-normal">ADDRESS 1</mat-label>
+                                        <mat-icon matSuffix color="warn">place</mat-icon>
+                                        <textarea matInput [(ngModel)]="customer.address1" formControlName="address1"
+                                            class="text-success"></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field>
+                                        <mat-label class="text-info font-weight-normal">ADDRESS 2 [Optional]</mat-label>
+                                        <mat-icon matSuffix color="warn">place</mat-icon>
+                                        <textarea matInput [(ngModel)]="customer.address2" formControlName="address2"
+                                            class="text-success"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 d-flex justify-content-end">
+                                    <button mat-raised-button class="btn btn-danger btn-sm mr-3"
+                                        (click)="onClickCancel()">Cancel</button>
+
+                                    <div *ngIf="isModify">
+                                        <button mat-raised-button class="btn btn-info btn-sm"
+                                            [disabled]="!permission.isAdd"
+                                            (click)="onSubmitCustomerDefail(customerDetailForm.value)"
+                                            [disabled]="customerDetailForm.valid==false">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

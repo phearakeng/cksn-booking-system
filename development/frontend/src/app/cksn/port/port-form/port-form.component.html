@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="main-content" [hidden]="!permission.isView">
+    <div class="container-fluid">
+      <form [formGroup]="portForm">
+        <div class="card">
+          <div class="d-flex justify-content-start p-3">
+            <div class="text-info font-weight-bold">PORT FORM</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button [disabled]="!permission.isAdd" (click)="onSave()" [disabled]="!permission.isAdd" mat-menu-item>
+                  <mat-icon class="text-info">save</mat-icon>
+                  <span class="text-info">Save</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+          <!---->
+          <div class="card-body ">
+            <div class="m-2">
+              <div class="row" [hidden]="true">
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <input matInput placeholder="ID" formControlName="ID">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <!--==========|-COUNTRY-|==========-->
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Country</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>place</mat-icon>
+                    <input type="text" formControlName="country" matInput class="text-success"
+                      [matAutocomplete]="autoCountry">
+                    <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountry"
+                      (optionSelected)="onSelectionCountryChanged($event)">
+                      <mat-option *ngFor="let country of filteredCountry | async" [value]="country">
+                        {{country.description}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Port</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>shutter_speed</mat-icon>
+                    <input matInput formControlName="port" class="text-success">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <!--==========|-CODE-|==========-->
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Code</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>format_color_text</mat-icon>
+                    <input matInput formControlName="code" class="text-success">
+                  </mat-form-field>
+                </div>
+
+                <!--==========|-LATLNG-|==========-->
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Latlng</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>assignment_late</mat-icon>
+                    <input matInput formControlName="latlong" class="text-success">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <!--==========|-TELEPHONE-|==========-->
+                <div class="col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <mat-label class="text-info font-weight-normal">Telephone</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>phone</mat-icon>
+                    <input matInput formControlName="telephone" class="text-success">
+                  </mat-form-field>
+                </div>
+
+                <!--==========|-WEB-|==========-->
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Web</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>public</mat-icon>
+                    <input matInput formControlName="web" class="text-success">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <!--==========|-PORT TYPE-|==========-->
+                <div class="col-sm-6" [hidden]="true">
+                  <mat-form-field>
+                    <input matInput placeholder="Port Type" formControlName="portType">
+                  </mat-form-field>
+                </div>
+                <!--==========|-CREATE DATE-|==========-->
+                <div class="col-sm-6" [hidden]="true">
+                  <mat-form-field>
+                    <input matInput placeholder="Create Date" formControlName="createDate">
+                  </mat-form-field>
+                </div>
+                <!--==========|IS ACTIVE|==========-->
+                <div class="col-sm-6" [hidden]="true">
+                  <mat-form-field>
+                    <input matInput placeholder="isActive" formControlName="isActive">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!--==========|BUTTON | CREATE / CANCEL|==========-->
+              <div class="row">
+                <div class="button_action col-sm-12 d-flex justify-content-end">
+                  <button mat-raised-button color="warn" class="me-3" (click)="onCancle()">Cancle</button>
+                  <button mat-raised-button color="primary" [disabled]="!permission.isAdd"
+                    (click)="onSave()">Create</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="wrapper">
+    <div class="group-component">
+        <div class="sidebar" data-color="rose" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+            <app-sidebar-cmp></app-sidebar-cmp>
+            <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div>
+        </div>
+        <div class="main-panel">
+            <app-navbar-cmp></app-navbar-cmp>
+            <router-outlet></router-outlet>
+            <!-- <div *ngIf="!isMap()">
+                    <app-footer-cmp></app-footer-cmp>
+                </div> -->
+            <div>
+                <footer class="footer ">
+                    <div class="container-fluid">
+                        <nav class="pull-left">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        CKSN
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="copyright pull-right">
+                            &copy;
+                            {{year | date: 'yyyy'}}
+                            <a href="https://cksntransport.com/" target="_blank">Your trusted transport partner</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <!-- <app-fixedplugin></app-fixedplugin> -->
+    </div>
+
+</div>

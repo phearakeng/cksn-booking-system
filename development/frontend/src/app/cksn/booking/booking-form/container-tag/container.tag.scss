@@ -1,0 +1,273 @@
+.input_fileupload--hidden {
+  display: none;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.documentContainer {
+  height: 200px;
+  // overflow: scroll;
+}
+
+@media (min-width:1440px) {
+  .tableFixHead {
+    width: 100%;
+  }
+}
+
+@media (min-width:2000px) {
+  .tableFixHead {
+    width: 100%;
+  }
+}
+
+.no_color_no_border {
+  border: none !important;
+  background-color: white !important;
+}
+
+a {
+  cursor: pointer;
+
+}
+
+a:hover {
+  color: blue;
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+.example-container {
+  overflow-x: auto;
+  height: 500px;
+}
+
+.lineBetween {
+  font-weight: bold;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lineBetween:before,
+.lineBetween:after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  color: blue;
+}
+
+a:hover {
+  color: blue;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  color: green;
+  font-weight: 500;
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+input:hover {
+  border: 2px solid green;
+}
+
+input {
+  position: absolute;
+  top: -1px;
+  left: -2px;
+  height: 100%;
+  width: 100%;
+
+}
+
+// ==========|TABLE|========== //
+td {
+  padding: 0px !important;
+}
+
+th {
+  font-size: 12px !important;
+}
+
+.thMDrop,
+.tdMDrop {
+  width: auto;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 999999 !important;
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.cdk-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 9999999 !important;
+}
+
+.cdk-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999999 !important;
+  pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0;
+}
+
+.truncate-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep div.mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+.tableFixHead {
+  overflow: auto;
+  // height: 300px;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+}
+
+/* Just common table stuff. Really. */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 8px 16px;
+}
+
+th {
+  background: #eee;
+}
+
+tfoot td {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 4 !important;
+}
+
+.shadow-input {
+  position: absolute;
+  top: 22px;
+  width: 0px;
+  height: 0px;
+  border: none;
+}
+
+span.remove-date {
+  position: absolute;
+  right: 16px;
+  top: 0px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+td {
+  position: relative;
+  width: 200px;
+}
+
+td:hover {
+  border: 2px solid green;
+}
+
+*[tabindex]:focus {
+  border: solid green 2px;
+}
+
+td:focus {
+  border: solid green 2px !important;
+}
+
+table.table-data tr.area-t>td.area {
+  border-top: 2px solid green !important;
+}
+
+table.table-data tr.area-b>td.area {
+  border-bottom: 2px solid green !important;
+}
+
+table.table-data td.area.area-l {
+  border-left: 2px solid green !important;
+  z-index: 1 !important;
+}
+
+table.table-data td.area.area-r {
+  border-right: 2px solid green !important;
+  z-index: 1 !important;
+}
+
+table.table-data td.area.cursor,
+table.table-data td.cursor {
+  background: #FAFAFF !important;
+}
+
+table.table-data.focus td.area.cursor,
+table.table-data.focus td.cursor {
+  background: #FAFAFF !important;
+  border: 2px solid rgb(0, 1, 0) !important;
+}
+
+table.table-data td.area {
+  background: #ECF3FF !important;
+}
+
+// ==========|END OF TABLE|========== //
+
+.noselect {
+  user-select: none;
+}
+
+.close:hover {
+  color: red;
+}
+
+.thead {
+  background-color: #20de20;
+}

@@ -1,0 +1,134 @@
+.example-container .mat-table.mat-table {
+  min-width: 950px;
+}
+
+.mat-header-row,
+.mat-footer-row,
+.mat-row {
+  min-width: 1700px;
+}
+
+mat-header-cell {
+  background: #18d1de;
+  text-transform: uppercase;
+  font-size: 5px;
+  font-weight: 600;
+}
+
+.lineBetween {
+  font-weight: bold;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lineBetween:before,
+.lineBetween:after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.lineBetween:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.lineBetween:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
+
+.link {
+  cursor: pointer;
+
+}
+
+.link:hover {
+  color: blue;
+}
+
+a:hover {
+  color: blue
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  color: blue
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+td {
+  padding: 0px !important;
+}
+
+th {
+  font-size: 12px !important;
+}
+
+.thMDrop,
+.tdMDrop {
+  width: auto;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.truncate-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shadow-input {
+  position: absolute;
+  top: 22px;
+  width: 0px;
+  height: 0px;
+  border: none;
+}
+
+span.remove-date {
+  position: absolute;
+  right: 16px;
+  top: 0px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mat-column-deliveryDate {
+  width: 100px;
+  flex: none;
+}

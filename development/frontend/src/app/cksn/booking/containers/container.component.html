@@ -1,0 +1,632 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 p-0 m-0">
+        <div class="card">
+          <div class="card-body" [hidden]="!invisbleLoading">
+            <div class="d-flex justify-content-start">
+
+              <h4 class="subHeaderTitle text-info font-weight-bold">CONTAINER</h4>
+              <div *ngIf="permission!=null" [hidden]="!permission.isView">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon class="subHeaderTitle text-info font-weight-bold mb-2">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item data-toggle="modal" data-target="#myModal10">
+                    <mat-icon class="text-info">voicemail</mat-icon>
+                    <span class="text-info">Filter</span>
+                  </button>
+                  <button mat-menu-item (click)="onClick_OpenMailDialog()" data-toggle="modal">
+                    <mat-icon class="text-info">email</mat-icon>
+                    <span class="text-info">Email</span>
+                  </button>
+                  <button mat-menu-item data-toggle="modal" (click)="openModal()">
+                    <mat-icon class="text-info">cloud_upload</mat-icon>
+                    <span class="text-info">CSV Import</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <mat-form-field class="fullWidth">
+                  <mat-icon class="text-info font-weight-normal" matPrefix>search</mat-icon>
+                  <mat-label class="text-info font-weight-normal">Search</mat-label>
+                  <input matInput type="text" name="criterial" (keyup)="onTable_filter($event.target.value)"
+                    [(ngModel)]="criterial">
+                  <button mat-button *ngIf="criterial" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="criterial=''">
+                    <mat-icon class="text-danger" (click)="onClick_RemoveSearch()">clear</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <mat-paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                  (page)="paginatorEvent($event)" showFirstLastButtons>
+                </mat-paginator>
+              </div>
+            </div>
+            <div class="tbl-container">
+              <mat-table mat-table #tblContainer [(dataSource)]="dataSourceContainer" matSort>
+                <ng-container matColumnDef="tbselect">
+                  <mat-header-cell style="flex: 0 0 50px;" class="text-primary" *matHeaderCellDef mat-sort-header>
+                  </mat-header-cell>
+                  <mat-cell style="flex: 0 0 50px;" matRipple *matCellDef="let element">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selectionContainer.toggle(element) : null"
+                      [checked]="selectionContainer.isSelected(element)" [aria-label]="checkboxLabel(element)">
+                    </mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="CKSNFile">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>
+                    CKSN File</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> <span class="link"
+                      (click)="onClick_OpenBooking(element)">{{element.booking.CKSNFile}}</span> </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="containerNo">
+                  <mat-header-cell mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Ctn No
+                  </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element" (click)="onClick_opernMultiDelivery(element)"><span
+                      class="link"> {{element.containerNo}} </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Broker">
+                  <mat-header-cell mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Broker
+                  </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element" (click)="onClick_opernMultiDelivery(element)"><span
+                      class="link"> {{
+                      element.booking.broker!=null?element.booking.broker.name:''}} </span>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="NotifyParty">
+                  <mat-header-cell mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Notify Party
+                  </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element" (click)="onClick_opernMultiDelivery(element)"><span
+                      class="link truncate-cell"> {{
+                            element.booking.notifyParty!=null?element.booking.notifyParty.name:''
+                          }}
+                    </span>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="demDue">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Dem Due</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.booking.demDue!=null?element.booking.demDue:''}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="detDue">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Det Due</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.booking.detDue!=null?element.booking.detDue:''}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="pickUpDate">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>
+                    PickUp Date</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.pickUpDate!=null?element.pickUpDate:''}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="deliveryDate">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>
+                    Delivery Date</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.deliveryDate!=null?element.deliveryDate:''}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="emptyReturn">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Empty Return</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element"> {{element.emptyReturn!=null?element.emptyReturn:''}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="emptyNotifyAgent">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Empty Notify Agent
+                  </mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.emptyNotifyAgent!=null?element.emptyNotifyAgent:''}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="agentPickUpEmpty">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Agent PickUp</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.agentPickUpEmpty!=null?element.agentPickUpEmpty:''}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="operation">
+                  <mat-header-cell class="text-light" *matHeaderCellDef mat-sort-header>Operation</mat-header-cell>
+                  <mat-cell matRipple *matCellDef="let element">
+                    {{element.booking.operation.lastName+' '+element.booking.operation.firstName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Status">
+                  <mat-header-cell style="flex: 0 0 60px;" class="text-light" *matHeaderCellDef mat-sort-header>
+                    Status </mat-header-cell>
+                  <mat-cell style="flex: 0 0 60px;" matRipple *matCellDef="let element">
+                    {{element.containerStatus.value}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell style="flex: 0 0 60px;" class="text-light" *matHeaderCellDef> action
+                  </mat-header-cell>
+                  <mat-cell style="flex: 0 0 60px;" *matCellDef="let element">
+                    <div class="d-flex justify-content-center">
+                      <button mat-raised-button type="button" (click)="onClick_Edit(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isUpdate" class="btn btn-success btn-link p-1 m-0">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button mat-raised-button type="button" (click)="onClick_remove(element)" *ngIf="permission!=null"
+                        [hidden]="!permission.isDelete" class="btn btn-danger btn-link p-0 m-0">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row class="text-primary" *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </div>
+
+          <div class="loader" [hidden]="invisbleLoading">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- filter modal -->
+<div class="modal fade modal-mini modal-primary" id="myModal10" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-small">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-info font-weight-bold">FILTER</h4>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-normal">Status</mat-label>
+              <mat-select [(ngModel)]="filter.containerStatusID">
+                <mat-option *ngFor="let containerStatus of containerStatuses" [value]="containerStatus.ID"
+                  class="text-success">
+                  {{containerStatus.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-normal">From Date</mat-label>
+              <input matInput [(ngModel)]="filter.fromDate" (focus)="fromDatePciker.open()" class="text-success"
+                [matDatepicker]="fromDatePciker" name="fromDate">
+              <mat-datepicker-toggle matSuffix [for]="fromDatePciker"></mat-datepicker-toggle>
+              <mat-datepicker #fromDatePciker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label class="text-info font-weight-normal">To Date</mat-label>
+              <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="filter.toDate" name="toDate"
+                class="text-success" (focus)="toDatePicker.open()">
+              <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #toDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+        <button mat-raised-button type="button" (click)="onClick_Filter()" class="btn btn-success btn-link">Filter
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- email  -->
+<div class="modal fade modal-mini modal-primary" id="myModalEmail" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 50% !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Email</h4>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <mat-form-field>
+          <input matInput name="To" [(ngModel)]="emailTo" placeholder="To">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput name="Subject" [(ngModel)]="emailSubject" required placeholder="Subject">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <textarea matInput rows="5" placeholder="Text" [(ngModel)]="emailText"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+        <button mat-raised-button type="button" (click)="onClick_SendEmail()" class="btn btn-success btn-link">send
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Container editor  -->
+<div class="modal fade  modal-primary" id="editorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog " style="max-width: 50% !important;  overflow-y: initial !important">
+    <form [formGroup]="containerFormEditor">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title text-primary">Container Delivery ( File : {{bookingFile}})</h4>
+
+
+          <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+              class="material-icons">clear</i></button>
+        </div>
+        <h5 class="text-primary lineBetween">Deliverys (CTN No {{containerNo}} | Size: {{containerSize}} | GW: {{GW}}
+          {{gwType}} | Commodity: {{commodity}}) </h5>
+
+        <div class="modal-body" style="height: 500px;
+        overflow-y: auto;">
+          <div class="mtl-1">
+
+            <div id="deliveryInfo " style="height: 100%;  overflow: visible;">
+
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="containerStatus" [(ngModel)]="container.containerStatusID">
+                      <mat-option *ngFor="let containerStatus of containerStatuses" [value]="containerStatus.ID">
+                        {{containerStatus.value}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="w-100">
+                    <input id="pickUpFrom" name="pickUpFrom" formControlName="pickUpFrom" readonly [disabled]='true'
+                      [(ngModel)]="container.pickUpFrom" placeholder="Pick Up From" matInput>
+
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="w-100">
+                    <input class="shadow-input" formControlName="pickUpDate" matInput [(ngModel)]="container.pickUpDate"
+                      placeholder="Pick Up Date Time" readonly [disabled]='true' [owlDateTime]="pickUpDateDatepicker2">
+
+                    <input type="text" [owlDateTimeTrigger]="pickUpDateDatepicker2" matInput readonly [disabled]='true'
+                      [value]="container.pickUpDate | dateFilter:'dd/MM/yyyy hh:mm'">
+
+                    <owl-date-time [pickerMode]="'dialog'" #pickUpDateDatepicker2>
+                      <mat-datepicker-toggle matSuffix [owlDateTimeTrigger]="pickUpDateDatepicker2">
+                      </mat-datepicker-toggle>
+                    </owl-date-time>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="w-100" style="z-index: 99999 !important;">
+                    <input class="shadow-input" formControlName="activeEndDate" matInput
+                      [(ngModel)]="container.deliveryDate" readonly [disabled]='true' placeholder="Delivery Date Time:"
+                      [owlDateTime]="dt1">
+
+                    <input type="text" [owlDateTimeTrigger]="dt1" matInput readonly [disabled]='true'
+                      [value]="container.deliveryDate | dateFilter:'dd/MM/yyyy hh:mm aa'">
+
+                    <owl-date-time [pickerMode]="'dialog'" #dt1>
+                      <mat-datepicker-toggle matSuffix [owlDateTimeTrigger]="dt1"></mat-datepicker-toggle>
+                    </owl-date-time>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput name="CustomerToReceive" [(ngModel)]="container.customerToReceive" readonly
+                      [disabled]='true' formControlName="CustomerToReceive" placeholder="Customer To Receive">
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput name="CustomerReceivedContact" [(ngModel)]="container.customerReceiveContact"
+                      readonly [disabled]='true' formControlName="CustomerReceiveContact" placeholder="Contact No.">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput name="destination" [(ngModel)]="container.destination" formControlName="destination"
+                      readonly [disabled]='true' placeholder="Location">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Truck" formControlName="truck" aria-label="truck" matInput
+                      [matAutocomplete]="autoTruck">
+                    <mat-autocomplete #autoTruck="matAutocomplete" [displayWith]="displayFnTruck"
+                      (optionSelected)="onSelectionTruckChanged($event)">
+                      <mat-option *ngFor="let truck of filteredTruck | async" [value]="truck">
+                        {{truck.model + " "+truck.plateNo}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div *ngIf="assetOf=='CKSN';then CKSN else BIZ "></div>
+              <ng-template #CKSN>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width">
+                      <input type="text" placeholder="Driver" formControlName="driver" aria-label="driver" matInput
+                        [matAutocomplete]="autoDriver">
+                      <mat-autocomplete #autoDriver="matAutocomplete" [displayWith]="displayFnDriver"
+                        (optionSelected)="onSelectionDriverChanged($event)">
+                        <mat-option *ngFor="let driver of filteredDriver | async" [value]="driver">
+                          {{driver.lastName + " "+driver.firstName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field>
+                      <input matInput name="DriverPhoneContact" formControlName="DriverPhoneContact"
+                        [(ngModel)]="driver.telephone1" [readonly]="true" placeholder="Driver Contact">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #BIZ>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input type="text" placeholder="Biz Name" value="{{bizName}}" matInput>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input type="text" placeholder="Driver Tel" value="{{bizTel}}" matInput>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="w-100  ">
+                    <input id="emptyReturn" name="emptyReturn" (focus)="emptyReturnDatepicker.open()"
+                      (dateInput)="onEmptyReturn_change('input', $event)" formControlName="emptyReturn"
+                      [(ngModel)]="container.emptyReturn" placeholder="Empty Return" matInput
+                      [matDatepicker]="emptyReturnDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="emptyReturnDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #emptyReturnDatepicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="w-100 ">
+                    <input id="mtNotifyAgent" name="emptyNotifyAgent" (focus)="emptyNotifyAgentDatepicker.open()"
+                      (dateInput)="onEmptyNotifyAgent_change('input',$event)" formControlName="emptyNotifyAgent"
+                      [(ngModel)]="container.emptyNotifyAgent" placeholder="Empty Notify Agent" matInput
+                      [matDatepicker]="emptyNotifyAgentDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="emptyNotifyAgentDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #emptyNotifyAgentDatepicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="w-100">
+                    <input id="emptyDepo" name="emptyDepo" formControlName="emptyDepo" [(ngModel)]="container.emptyDepo"
+                      placeholder="Drop Of Depo" matInput>
+
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="w-100">
+                    <input id="agentPickUpEmpty" (focus)="agentPickUpEmptyDatepicker.open()"
+                      (dateInput)="onEmptyAgentPickedUp_change('input',$event)" name="agentPickUpEmpty"
+                      formControlName="agentPickUpEmpty" [(ngModel)]="container.agentPickUpEmpty"
+                      placeholder="Agent Picked Empty" matInput [matDatepicker]="agentPickUpEmptyDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="agentPickUpEmptyDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #agentPickUpEmptyDatepicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100  ">
+                    <input class="w-100  " matInput formControlName="detDue" value="{{detDue}}"
+                      placeholder="Last Free Det">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100  ">
+                    <input class="w-100  " matInput formControlName="extraFeeCharge"
+                      [(ngModel)]="container.extraDeliveryFee" placeholder="Extra Charge">
+                  </mat-form-field>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+          <button mat-raised-button type="button" *ngIf="enableEdit" [disabled]="!permission.isAdd"
+            (click)="onClick_save()" class="btn btn-success btn-link">Save
+            <div class="ripple-container"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- modal multi drop -->
+<div class="modal fade  modal-primary" id="multiDropDialog" tabindex="-1" role="dialog"
+  aria-labelledby="multiDropDialog" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 65% !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-primary">Multiple Drop Container ( File : {{containerNo}} )</h4>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12 col-cl-12">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th class="thMDrop" scope="col">No</th>
+                    <th class="thMDrop" scope="col">
+                      Contact Name
+                    </th>
+                    <th class="thMDrop" scope="col">
+                      Phone Contact
+                    </th>
+                    <th class="thMDrop" scope="col">
+                      Address
+                    </th>
+                    <th class="thMDrop" scope="col">
+                      Delivery Date
+                    </th>
+                    <th class="thMDrop" scope="col">
+                      Delivery Status
+                    </th>
+                    <th class="thMDrop" scope="col" class="no_color_no_border">
+
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of multiDeliverys;let i = index">
+                    <td class="tdMDrop">{{i+1}}</td>
+                    <td class="tdMDrop">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="txt_center pointer" data-toggle="modal"> {{row.contactName}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.contactName"
+                          [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td class="tdMDrop">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="txt_center pointer" data-toggle="modal"> {{row.phoneContact}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.phoneContact"
+                          [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td class="tdMDrop">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="txt_center pointer" data-toggle="modal"> {{row.address}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input matInput [(ngModel)]="editCacheMultiDelivery[row.key].data.address"
+                          [ngModelOptions]="{standalone: true}" />
+                      </ng-container>
+                    </td>
+                    <td class="tdMDrop">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="txt_center pointer" data-toggle="modal">
+                          {{row.deliveryDate | date: 'dd/MM/yyyy hh:mm a'}}
+                        </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <input class="shadow-input" matInput
+                          [(ngModel)]="editCacheMultiDelivery[row.key].data.deliveryDate"
+                          [owlDateTime]="deliverDateCTRLEdit">
+
+                        <input type="text" [owlDateTimeTrigger]="deliverDateCTRLEdit" matInput
+                          [value]="editCacheMultiDelivery[row.key].data.deliveryDate | dateFilter:'dd/MM/yyyy hh:mm a'">
+
+                        <owl-date-time [hour12Timer]="true" [pickerMode]="'dialog'" #deliverDateCTRLEdit>
+                        </owl-date-time>
+
+                      </ng-container>
+                    </td>
+                    <td class="tdMDrop">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <span class="txt_center pointer"> {{row.deliveryStatus?row.deliveryStatus.value:""}} </span>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <mat-select [(ngModel)]="editCacheMultiDelivery[row.key].data.deliveryStatusID"
+                          [ngModelOptions]="{standalone: true}">
+                          <mat-option *ngFor="let mDropStatus of multiDropStatusTypeList" [value]="mDropStatus.ID">
+                            {{mDropStatus.value}}</mat-option>
+                        </mat-select>
+                      </ng-container>
+                    </td>
+                    <td class="no_color_no_border">
+                      <ng-container *ngIf="!editCacheMultiDelivery[row.key].edit">
+                        <button mat-raised-button type="button" (click)="startEditMultiDelivery(row.key)"
+                          mat-raised-button type="button" class="btn btn-success btn-round btn-sm  p-1 m-1">
+                          <i class="material-icons">edit</i>
+                        </button>
+                        <button mat-raised-button type="button" (click)="onClick_deleteMultiDelivery(row)"
+                          mat-raised-button type="button" class="btn btn-danger btn-round btn-sm  p-1 m-0">
+                          <i class="material-icons">delete</i>
+                        </button>
+                      </ng-container>
+                      <ng-container *ngIf="editCacheMultiDelivery[row.key].edit">
+                        <button mat-raised-button type="button" (click)="onClick_saveEditMultiDelivery(row.key)"
+                          mat-raised-button type="button" class="btn btn-primary btn-round btn-sm p-1 m-1">
+                          <i class="material-icons">save</i>
+                        </button>
+                      </ng-container>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+        <button mat-raised-button type="button" *ngIf="enableEdit" [disabled]="!permission.isAdd"
+          (click)="onClick_savePostMultiDrop()" class="btn btn-success btn-link">Save
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fleet-import-modal></app-fleet-import-modal>

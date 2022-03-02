@@ -1,0 +1,110 @@
+<div class="container">
+  <div class="main-content" [hidden]="!permission.isView">
+    <div class="container-fluid">
+      <form [formGroup]="truckForm">
+        <div class="card p-4 ">
+          <div>
+            <div class="text-info font-weight-bold">TRUCK FORM
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon class="mb-1">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button [disabled]="!permission.isAdd" (click)="onSave()" mat-menu-item>
+                  <mat-icon class="text-info">save</mat-icon>
+                  <span class="text-info">Save</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <div class="card-body text-center">
+            <div class="m-2">
+              <div class="row" [hidden]="true">
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <input matInput placeholder="ID" formControlName="ID">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Assets Of</mat-label>
+                    <mat-select formControlName="assetOf" PLA required (change)="selectionChangeAsset($event)">
+                      <mat-option value="CKSN" selected="true">CKSN</mat-option>
+                      <mat-option value="BIZ">BUSINESS PARTNER</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div *ngIf="assetOf!='CKSN';then BIZ">
+              </div>
+              <ng-template #BIZ>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <mat-form-field>
+                      <input type="text" placeholder="Biz Partner" formControlName="bizPartner" matInput
+                        class="text-success" [matAutocomplete]="autoCompleteBiz">
+                      <mat-autocomplete #autoCompleteBiz="matAutocomplete" [displayWith]="displayFnBusinessPartner"
+                        (optionSelected)="onSelectionBusinessPartnerChanged($event)">
+                        <mat-option *ngFor="let biz of filteredbusinessPartner | async" [value]="biz">
+                          {{biz.name +' - Company '+biz.company}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Model</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>local_shipping</mat-icon>
+                    <input matInput formControlName="model" class="text-success">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Weight</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>waves</mat-icon>
+                    <input matInput formControlName="weight" class="text-success">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field>
+                    <mat-label class="text-info font-weight-normal">Plat No</mat-label>
+                    <mat-icon aria-hidden="false" matSuffix>money</mat-icon>
+                    <input matInput formControlName="plateNo" class="text-success">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 " [hidden]="true">
+                  <mat-form-field class="example-full-width">
+                    <mat-icon aria-hidden="false" matSuffix>phone</mat-icon>
+                    <input matInput placeholder="Create" formControlName="created">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row" [hidden]="true">
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <input matInput placeholder="status" formControlName="status">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="button_action col-sm-12 d-flex justify-content-end">
+                  <button mat-raised-button color="warn" class="me-3" (click)="onCancle()">Cancle</button>
+                  <button mat-raised-button color="primary" [disabled]="!permission.isAdd"
+                    (click)="onSave()">Create</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

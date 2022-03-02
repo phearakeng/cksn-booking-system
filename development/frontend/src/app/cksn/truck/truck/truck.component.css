@@ -1,0 +1,45 @@
+.customerName {
+  margin-bottom: 0rem;
+}
+
+.place,
+phone {
+  margin-bottom: 0rem;
+  color: grey;
+  font-size: 12px;
+}
+
+.placeIconSize {
+  font-size: 14px !important;
+}
+
+.phoneIconSize {
+  font-size: 14px !important;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  background: #18d1de;
+}
+
+mat-cell,
+td {
+  font-weight: 400;
+}
+
+@media screen and (max-height: 1000px) {
+  .tbl-container {
+    height: 600px;
+    overflow: auto;
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .tbl-container {
+    height: 425px;
+    overflow: auto;
+  }
+}

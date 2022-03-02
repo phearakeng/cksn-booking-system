@@ -1,0 +1,15 @@
+table {
+  width: 100%;
+}
+
+th {
+  background: #18d1de;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.tbl-container {
+  height: 250px;
+  overflow: auto;
+}

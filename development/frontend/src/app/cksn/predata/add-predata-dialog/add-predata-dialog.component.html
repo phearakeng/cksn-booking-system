@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>Add/Edit</h1>
+<div>
+  <mat-form-field>
+    <mat-label class="text-info font-weight-normal">Criterial</mat-label>
+    <input matInput [(ngModel)]="criterial" class="text-success">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label class="text-info font-weight-normal">Value</mat-label>
+    <input matInput [(ngModel)]="criterialSelected.value" class="text-success">
+  </mat-form-field>
+  <section class="example-section">
+    {{criterialSelected.status=="1"?"Enable":"Disabled"}}
+    <mat-slide-toggle [checked]="criterialSelected.status==1?true:false" (change)="change($event)">
+      <!-- [disabled]="disabled"> -->
+
+    </mat-slide-toggle>
+  </section>
+  <div class="d-flex justify-content-end mb-2">
+    <button mat-button (click)="onClick_Add()" cdkFocusInitial>Add</button>
+  </div>
+  <div class="tbl-container table-responsive">
+    <table mat-table #tblPredata [(dataSource)]="dataSourcePredata" class="mat-elevation-z8">
+      <ng-container matColumnDef="ID">
+        <th mat-header-cell class="text-light" *matHeaderCellDef> ID </th>
+        <td mat-cell matRipple *matCellDef="let element;let i=index"> {{i+1}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Value">
+        <th mat-header-cell class="text-light" *matHeaderCellDef> Value </th>
+        <td mat-cell matRipple *matCellDef="let element"> {{element.value}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Status">
+        <th mat-header-cell class="text-light" *matHeaderCellDef> Status </th>
+        <td mat-cell matRipple *matCellDef="let element"> {{element.status=="1"?"ON":"OFF"}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell class="text-light" *matHeaderCellDef> action </th>
+        <td mat-cell *matCellDef="let element">
+          <i class="material-icons" style="cursor: pointer;" (click)="onClick_Edit(element)">edit</i>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button cdkFocusInitial (click)="onClick_No()">No, Thanks</button>
+  <button mat-raised-button target="_blank" cdkFocusInitial [disabled]="!permission.isAdd" (click)="onClick_Save()">Yes,
+    Save</button>
+</div>

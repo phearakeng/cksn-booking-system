@@ -1,0 +1,67 @@
+ <div class="main-content" [hidden]="!permission.isView">
+   <div class="container-fluid">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="card">
+           <div class="card-body">
+             <div class="d-flex justify-content-start">
+               <h4 class="subHeaderTitle text-info font-weight-bold">PRE DATA</h4>
+               <div>
+                 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                   <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+                 </button>
+                 <mat-menu #menu="matMenu">
+                   <button [disabled]="!permission.isAdd" mat-menu-item (click)="onClick_New()">
+                     <mat-icon class="text-info">add</mat-icon>
+                     <span class="text-info">New</span>
+                   </button>
+                 </mat-menu>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-2">
+                 <mat-form-field class="example-full-width">
+                   <mat-label class="text-info font-weight-normal">PICK ONE</mat-label>
+                   <input type="text" class="text-success" matInput [formControl]="criterialAuoComplete" [matAutocomplete]="auto">
+                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCriterial"
+                     (optionSelected)='getSelectedCriterial($event.option.value)'>
+                     <mat-option *ngFor="let criterial of filteredCriterial | async" [value]="criterial">
+                       {{criterial.criterial}}
+                     </mat-option>
+                   </mat-autocomplete>
+                 </mat-form-field>
+               </div>
+             </div>
+             <div class="tbl-container table-responsive">
+               <table mat-table #tblPredata [(dataSource)]="dataSourcePredata" class="mat-elevation-z8"
+                 style="width:100%;">
+
+                 <ng-container matColumnDef="Description">
+                   <th mat-header-cell class="text-light" *matHeaderCellDef> Description </th>
+                   <td mat-cell matRipple *matCellDef="let element"> {{element.description}} </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="Criterial">
+                   <th mat-header-cell class="text-light" *matHeaderCellDef> Criterial </th>
+                   <td mat-cell matRipple *matCellDef="let element"> {{element.criterial}} </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="action">
+                   <th mat-header-cell class="text-light" *matHeaderCellDef> action </th>
+                   <td mat-cell *matCellDef="let element">
+                     <button mat-raised-button type="button" (click)="onClick_Edit(element)"
+                       class="btn btn-success btn-link">
+                       <i class="material-icons">edit</i>
+                     </button>
+                   </td>
+                 </ng-container>
+
+                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+               </table>
+
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>

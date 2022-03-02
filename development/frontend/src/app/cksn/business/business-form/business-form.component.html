@@ -1,0 +1,144 @@
+<div class="container">
+  <div class="main-content">
+    <div class="container-fluid" [hidden]="!permission.isView">
+      <form [formGroup]="bizDetailForm">
+        <div class="card p-4">
+          <div class="d-flex justify-content-start">
+            <div class="text-info font-weight-bold">BUSINESS FORM</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button (click)="onSubmitBizDetail(bizDetailForm.value)" [disabled]="!permission.isAdd"
+                  [disabled]="!bizDetailForm.valid" mat-menu-item>
+                  <mat-icon class="text-info">save</mat-icon>
+                  <span class="text-info">Save</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+          <!--FORM-->
+          <div class="card-body m-2">
+            <div class="row">
+
+              <!--NAME-->
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Name</mat-label>
+                  <mat-icon matSuffix color="warn">person </mat-icon>
+                  <input matInput [(ngModel)]="business.name" formControlName="name" class="text-success">
+                </mat-form-field>
+              </div>
+
+              <!--COMPANY-->
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Company</mat-label>
+                  <mat-icon matSuffix color="warn">domain</mat-icon>
+                  <input matInput [(ngModel)]="business.company" formControlName="company" class="text-success">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--TELEPHONE-->
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Telephone</mat-label>
+                  <mat-icon matSuffix color="warn">phone</mat-icon>
+                  <input matInput [(ngModel)]="business.telephone" formControlName="telephone" class="text-success">
+                  <mat-error *ngFor="let validation of validation_messages.phone">
+                    <mat-error class="error-message" class="error-message"
+                      *ngIf="bizDetailForm.get('telephone').hasError(validation.type) && (bizDetailForm.get('telephone').dirty || bizDetailForm.get('telephone').touched)">
+                      {{ validation.message }}
+                    </mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">HP</mat-label>
+                  <mat-icon matSuffix color="warn">hourglass_full</mat-icon>
+                  <input matInput [(ngModel)]="business.handPhone" formControlName="handPhone" class="text-success">
+                  <mat-error *ngFor="let validation of validation_messages.phone">
+                    <mat-error class="error-message" class="error-message"
+                      *ngIf="bizDetailForm.get('handPhone').hasError(validation.type) && (bizDetailForm.get('handPhone').dirty || bizDetailForm.get('handPhone').touched)">
+                      {{ validation.message }}
+                    </mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--FORM-->
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-label class="text-info font-weight-normal">Email</mat-label>
+                  <mat-icon matSuffix color="warn">email</mat-icon>
+                  <input matInput [(ngModel)]="business.email" formControlName="email" class="text-success">
+                  <mat-error *ngFor="let validation of validation_messages.email">
+                    <mat-error class="error-message" class="error-message"
+                      *ngIf="bizDetailForm.get('email').hasError(validation.type) && (bizDetailForm.get('email').dirty || bizDetailForm.get('email').touched)">
+                      {{ validation.message }}
+                    </mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Fax</mat-label>
+                  <mat-icon matSuffix color="warn">account_balance</mat-icon>
+                  <input matInput [(ngModel)]="business.fax" formControlName="fax" class="text-success">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Website</mat-label>
+                  <mat-icon matSuffix color="warn">link</mat-icon>
+                  <input matInput id="website" [(ngModel)]="business.website" [(ngModel)]="business.website"
+                    formControlName="website" name="website" id="website" class="text-success">
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Position</mat-label>
+                  <mat-icon matSuffix color="warn">settings_input_composite</mat-icon>
+                  <input matInput [(ngModel)]="business.position" formControlName="position" class="text-success">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <mat-form-field>
+                  <mat-label class="text-info font-weight-normal">Description</mat-label>
+                  <mat-icon aria-hidden="false" matSuffix color="warn">description</mat-icon>
+                  <input matInput [(ngModel)]="business.description" [(ngModel)]="business.description"
+                    formControlName="description" name="description" id="description" class="text-success">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end ">
+              <div>
+                <button mat-raised-button type="button" (click)="onClickCancel()" class="btn btn-danger btn-sm mr-2">
+                  Cancel
+                </button>
+              </div>
+              <div *ngIf="isModify">
+                <button mat-raised-button type="button" (click)="onSubmitBizDetail(bizDetailForm.value)"
+                  [disabled]="!permission.isAdd" class="btn btn-info btn-sm">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

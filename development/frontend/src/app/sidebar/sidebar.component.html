@@ -1,0 +1,69 @@
+<!--
+  |====================|COMPANY LOGO|====================|
+-->
+<div class="logo">
+  <a class="simple-text logo-mini">
+    <div class="logo-img">
+      <img src="./assets/img/faces/logo.jpg" />
+    </div>
+  </a>
+  <a href="#/dashboard" class="simple-text logo-normal" style="font-weight: bold; color: #119af0;">
+    CKSN
+  </a>
+</div>
+
+<!--
+  |====================|USERNAME|====================|
+-->
+<div class="sidebar-wrapper">
+  <div class="user">
+    <div class="photo">
+      <img src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" />
+    </div>
+    <div class="user-info">
+      <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+        <span style="font-weight: bold; color: #119af0; text-transform: uppercase; font-size: 20px;">
+          {{username}}
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!--|====================|MENU ITEMS|====================|-->
+  <ul class="nav">
+    <li routerLinkActive="active" *ngFor="let menuitem of menuItems" class="nav-item">
+      <!--If is a single link-->
+      <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link'" class="nav-link">
+        <i class="material-icons">{{menuitem.icontype}}</i>
+        <p>{{menuitem.title}}</p>
+      </a>
+      <!--If it have a submenu-->
+      <a data-toggle="collapse" href="#{{menuitem.collapse}}" *ngIf="menuitem.type === 'sub'" (click)="updatePS()"
+        class="nav-link">
+        <i class="material-icons" style="color:#18d1de;">{{menuitem.icontype}}</i>
+        <p style="color:#18d1de; font-weight: bold;">{{menuitem.title}}<b class="caret"></b></p>
+      </a>
+
+      <!--Display the submenu items-->
+      <div id="{{menuitem.collapse}}" class="collapse" *ngIf="menuitem.type === 'sub'">
+        <ul class="nav">
+          <li routerLinkActive="active" *ngFor="let childitem of menuitem.children" class="nav-item">
+            <a [routerLink]="[menuitem.path, childitem.page.pageUrl]" [hidden]="!childitem.isView" class="nav-link">
+              <span class="sidebar-mini mt-1">
+                <i class="material-icons" style="font-weight: bold; color: #f5d142;">label_important</i>
+              </span>
+              <span class="sidebar-normal"
+                style="font-weight: bold; color:#f5d142; text-transform: uppercase;">{{childitem.page.titleEN}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/pages/login" class="nav-link">
+        <i class="material-icons" style="color: #f01175; font-weight: 400;">directions_run</i>
+        <p style="color: #f01175; font-weight: 600;">Logout</p>
+      </a>
+    </li>
+  </ul>
+</div>

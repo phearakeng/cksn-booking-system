@@ -1,0 +1,180 @@
+<div class="main-content">
+  <div class="container-fluid">
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="filterForm">
+            <div class="card-title">
+              <h4 class="text-info font-weight-bold mb-4 text-center">REPORTING FORM</h4>
+            </div>
+
+            <!--==========|-FROM DATE / TO DATE-|==========-->
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <!--********|FROM DATE|********-->
+              <div class="col-md-5">
+                <mat-form-field>
+                  <mat-label class="text-info">FROM DATE</mat-label>
+                  <input matInput (focus)="fromDatePciker.open()" formControlName="fromDate" class="text-success"
+                    [matDatepicker]="fromDatePciker" name="fromDate">
+                  <mat-datepicker-toggle matSuffix [for]="fromDatePciker"></mat-datepicker-toggle>
+                  <mat-datepicker #fromDatePciker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!--********|TO DATE|********-->
+              <div class="col-md-5">
+                <mat-form-field>
+                  <mat-label class="text-info">TO DATE</mat-label>
+                  <input matInput [matDatepicker]="toDatePicker" formControlName="toDate" name="toDate"
+                    class="text-success" (focus)="toDatePicker.open()">
+                  <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #toDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--==========|-BIZ PARTNER / SELECT STATUS-|==========-->
+            <div class="row">
+              <div class="col-md-1"></div>
+              <!--********|BIZ PARTNER|********-->
+              <div class="col-md-5">
+                <mat-form-field class="example-full-width">
+                  <mat-label class="text-info">BIZ PARTNER</mat-label>
+                  <input type="text" formControlName="bizPartner" aria-label="bizPartner" class="text-success" matInput
+                    [matAutocomplete]="autoCompleteBizPartner">
+                  <mat-autocomplete #autoCompleteBizPartner="matAutocomplete" [displayWith]="displayFnBizPartner"
+                    (optionSelected)="onSelectionBizPartnerChanged($event)">
+                    <mat-option *ngFor="let biz of filteredbusinessPartner | async" [value]="biz">
+                      {{biz.name +' - Company '+biz.company}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <!--********|SELECT STSATUS|********-->
+              <div class="col-md-5">
+                <mat-form-field>
+                  <mat-label class="text-info">SELECT STATUS</mat-label>
+                  <mat-select formControlName="bookingStatus">
+                    <mat-option *ngFor="let bookingStatus of bookingStatusList" [value]="bookingStatus.ID"
+                      class="text-success">
+                      {{bookingStatus.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--==========|-CUSTOMER / USER OPERATION-|==========-->
+            <div class="row">
+              <div class="col-md-1"></div>
+              <!--********|CUSTOMER|********-->
+              <div class="col-md-5">
+                <mat-form-field>
+                  <mat-label class="text-info">CUSTOMER</mat-label>
+                  <input type="text" formControlName="customer" aria-label="Assignee" matInput class="text-success"
+                    [matAutocomplete]="autoCustomer">
+                  <mat-autocomplete #autoCustomer="matAutocomplete" [displayWith]="displayCustomer"
+                    (optionSelected)="onSelectionCustomerChanged($event)">
+                    <mat-option *ngFor="let customer of filteredCustomer | async" [value]="customer">
+                      {{customer.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <!--********|USER OPERATION|********-->
+              <div class="col-md-5">
+                <mat-form-field class="example-full-width">
+                  <mat-label class="text-info">USER OPERATION</mat-label>
+                  <input type="text" formControlName="userOperation" class="text-success" aria-label="user operation"
+                    matInput [matAutocomplete]="autoCompleteUserOperation">
+                  <mat-autocomplete #autoCompleteUserOperation="matAutocomplete" [displayWith]="displayFNUserOperation"
+                    (optionSelected)="onSelectionUserOperationChanged($event)">
+                    <mat-option *ngFor="let us of filteredUserOperation | async" [value]="us">
+                      {{us.lastName +' '+us.firstName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--==========|-SELECTION DATE / BUTTON | FILTER / EXPORT-|==========-->
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-5">
+                <mat-form-field>
+                  <mat-label class="text-info">SELECTION DATE</mat-label>
+                  <mat-select formControlName="selectionDate">
+                    <mat-option *ngFor="let d of dateFilter" [value]="d.val" class="text-success" class="text-success">
+                      {{d.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-5">
+                <button class="btn btn-info btn-sm mr-3" (click)="onClick_filter()">
+                  <mat-icon>filter_list</mat-icon> Filter
+                </button>
+                <button class="btn btn-success btn-sm" (click)="onClick_export()">
+                  <mat-icon>backup</mat-icon> Export
+                </button>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--==========|DATA RETURN|==========-->
+    <div class="card" [hidden]="!invisbleLoading">
+      <div class="card-body">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" (click)="reportSelection('Booking_Report')">
+            <a class="nav-link active" id="pills-booking-tab" data-toggle="pill" href="#booking-tab" role="tab"
+              aria-controls="pills-home" aria-selected="true">Booking Report</a>
+          </li>
+          <li class="nav-item" (click)="reportSelection('Empty_Return_Report')">
+            <a class="nav-link" id="pills-empty-tab" data-toggle="pill" href="#empty-tab" role="tab"
+              aria-controls="pills-empty" aria-selected="false">Empty Report</a>
+          </li>
+          <li class="nav-item" (click)="reportSelection('Console_Report')">
+            <a class="nav-link" id="pills-console-tab" data-toggle="pill" href="#console-tab" role="tab"
+              aria-controls="pills-empty" aria-selected="false">Console Report</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="booking-tab" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table % !important; table-responsive" id="bookingReport" #bookingReport>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="empty-tab" role="tabpanel" aria-labelledby="pills-empty-tab">
+            <table class="table % !important; table-responsive " id="emptyReport" #emptyReport>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="console-tab" role="tabpanel" aria-labelledby="pills-console-tab">
+            <table class="table % !important; table-responsive " id="consoleReport" #consoleReport>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="loader" [hidden]="invisbleLoading">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
+    </div>
+
+
+  </div>
+</div>

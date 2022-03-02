@@ -1,0 +1,17 @@
+FROM  node:lts-alpine3.9 as builder
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json ./
+
+RUN npm cache verify
+
+RUN npm install
+
+COPY . . 
+
+RUN npm run build --prod
+
+FROM nginx:mainline-alpine
+
+COPY --from=builder /usr/src/app/dist/demo /usr/share/nginx/html

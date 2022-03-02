@@ -1,0 +1,50 @@
+<div class="modal fade modal-mini modal-primary" id="myModal10" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-small">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <input matInput [(ngModel)]="criterialFilter.fromDate" [matDatepicker]="fromDatePciker" name="fromDate" class="text-success"
+                placeholder="From date">
+              <mat-datepicker-toggle matSuffix [for]="fromDatePciker"></mat-datepicker-toggle>
+              <mat-datepicker #fromDatePciker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="criterialFilter.toDate" name="toDate" class="text-success"
+                placeholder="To Date">
+              <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #toDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="w-100">
+              <mat-label>dfgdfg</mat-label>
+              <mat-select [(ngModel)]="criterialFilter.bookingStatusID" name="bookingStatusID">
+                <mat-option *ngFor="let status of requestStatusList" [value]="status.ID" class="text-success">{{status.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+        <button mat-raised-button type="button" (click)="addFilter()" class="btn btn-success btn-link">Filter
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,264 @@
+<form #userForm="ngForm" [hidden]="!permission.isView" style="overflow-x: hidden;" class="m-2">
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-start">
+
+                <div class="text-info font-weight-bold">USER FORM</div>
+                <div>
+                  <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button [hidden]="!permission.isAdd" mat-menu-item [disabled]="userForm.invalid"
+                      (click)="onClick_Save()">
+                      <mat-icon class="text-info">save</mat-icon>
+                      <span class="text-info">Save</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </div>
+
+              <mat-tab-group>
+                <!--=====|USER INFO|=====-->
+                <mat-tab label="USER INFO">
+                  <ng-template matTabContent>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <mat-form-field class="mt-4">
+                          <mat-label class="text-info font-weight-normal">Last Name [En]</mat-label>
+                          <mat-icon matSuffix color="warn">edit</mat-icon>
+                          <input matInput [(ngModel)]="user.lastName" #lastName="ngModel" name="lastName" id="lastName"
+                            class="text-success">
+                          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="lastName.errors.required">
+                              last name is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">First Name [En]</mat-label>
+                          <mat-icon matSuffix color="warn">edit</mat-icon>
+                          <input matInput [(ngModel)]="user.firstName" #firstName="ngModel" name="firstName"
+                            id="firstName" class="text-success">
+                          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="firstName.errors.required">
+                              first Name is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                        <mat-label class="text-info font-weight-normal">Gender: </mat-label>
+                        <mat-radio-group [(ngModel)]="user.gender" name="gender" aria-label="Select Gender"
+                          class="mt-2">
+                          <mat-radio-button value="2" class="mr-2">Male</mat-radio-button>
+                          <mat-radio-button [checked]="true" value="1">Female</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Date Of Birth</mat-label>
+                          <input id="dob" [(ngModel)]="user.dob" #dob="ngModel" name="dob" class="text-success"
+                            (focus)="picker.open()" matInput [matDatepicker]="picker">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker [startAt]="startDate"></mat-datepicker>
+                          <div *ngIf="dob.invalid && (dob.dirty || dob.touched)" class="alert alert-danger">
+                            <div *ngIf="dob.errors.required">
+                              date of Birth is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Telephone [1]</mat-label>
+                          <mat-icon matSuffix color="warn">phone</mat-icon>
+                          <input matInput [(ngModel)]="user.telephone1" #telephone1="ngModel" name="telephone1"
+                            class="text-success" id="telephone1">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Telephone [2]</mat-label>
+                          <mat-icon matSuffix color="warn">phone</mat-icon>
+                          <input matInput [(ngModel)]="user.telephone2" #telephone2="ngModel" name="telephone2"
+                            class="text-success" id="telephone2" placeholder="Telephone 2">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Email</mat-label>
+                          <mat-icon matSuffix color="warn">email</mat-icon>
+                          <input matInput [(ngModel)]="user.email" #email="ngModel" name="email" id="email"
+                            class="text-success">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Position</mat-label>
+                          <mat-select [(ngModel)]="user.positionID" #positionID="ngModel" name="positionID"
+                            class="text-success" id="positionID">
+                            <mat-option *ngFor="let type of positionTypeList" [(value)]="type.ID">{{type.value}}
+                            </mat-option>
+                          </mat-select>
+                          <div *ngIf="positionID.invalid && (positionID.dirty || positionID.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="positionID.errors.required">
+                              position is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Date Of Join</mat-label>
+                          <input id="dateofjoin" class="text-success" [(ngModel)]="user.dateJoined"
+                            (focus)="pickerDateJoin.open() " (dateChange)="onDateJoinChange()" #dateJoined="ngModel"
+                            name="dateJoined" matInput [matDatepicker]="pickerDateJoin">
+                          <mat-datepicker-toggle matSuffix [for]="pickerDateJoin"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerDateJoin></mat-datepicker>
+                          <div *ngIf="dateJoined.invalid && (dateJoined.dirty || dateJoined.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="dateJoined.errors.required">
+                              date of join is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Length Of Service</mat-label>
+                          <mat-icon matSuffix color="warn">email</mat-icon>
+                          <input matInput [(ngModel)]="user.lengthOfService" #lengthOfService="ngModel"
+                            class="text-success" name="user.lengthOfService" id="lengthOfService">
+                          <div *ngIf="lengthOfService.invalid && (lengthOfService.dirty || lengthOfService.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="lengthOfService.errors.required">
+                              length of service is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6 col-sm-6 mt-4">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Street No</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput [(ngModel)]="user.streetNo" #streetNo="ngModel" name="streetNo" id="streetNo"
+                            class="text-success">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Home Address</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput [(ngModel)]="user.homeNo" #homeNo="ngModel" name="homeNo" id="homeNo"
+                            class="text-success">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Province</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput id="province" #province="ngModel" [(ngModel)]="user.province" name="province"
+                            class="text-success" id="province">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">District</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput [(ngModel)]="user.district" #district="ngModel" name="district" id="district"
+                            class="text-success">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Commune</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput [(ngModel)]="user.commune" #commune="ngModel" name="commune" id="commune"
+                            class="text-success">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Village</mat-label>
+                          <mat-icon matSuffix color="warn">person_pin_circle</mat-icon>
+                          <input matInput [(ngModel)]="user.village" #village="ngModel" name="village" id="village"
+                            class="text-success">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!-- </form> -->
+                  </ng-template>
+                </mat-tab>
+
+                <!--=====|USER GRANT|=====-->
+                <mat-tab label="USER GRANT">
+                  <ng-template matTabContent align="center">
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <mat-form-field class="mt-4">
+                          <mat-label class="text-info font-weight-normal">Username</mat-label>
+                          <mat-icon matSuffix color="warn">email</mat-icon>
+                          <input matInput id="userName" #userName="ngModel" [(ngModel)]="user.userName" name="userName" class="text-success">
+                          <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="userName.errors.required">
+                              user name is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Password</mat-label>
+                          <input matInput id="password" [type]="hide ? 'password' : 'text' " [(ngModel)]="user.password" class="text-success"
+                            #password="ngModel" name="password">
+                          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                            [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                          </button>
+                          <div *ngIf="password.invalid && (password.dirty || password.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="password.errors.required">
+                              user password is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Department</mat-label>
+                          <mat-select [(ngModel)]="departmentID" #department="ngModel" name="departmentID" class="text-success"
+                            (ngModelChange)="onDepartmentSelectChanged()">
+                            <mat-option *ngFor="let type of departmentList" [value]="type.ID">{{type.name}}</mat-option>
+                          </mat-select>
+                          <div *ngIf="department.invalid && (department.dirty || department.touched)"
+                            class="alert alert-danger">
+                            <div *ngIf="department.errors.required">
+                              department is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">Group</mat-label>
+                          <mat-select [(ngModel)]="user.groupID" #group="ngModel" name="groupID" class="text-success">
+                            <mat-option *ngFor="let type of groupList" [value]="type.ID">{{type.group}}</mat-option>
+                          </mat-select>
+                          <div *ngIf="group.invalid && (group.dirty || group.touched)" class="alert alert-danger">
+                            <div *ngIf="group.errors.required">
+                              group is required.
+                            </div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!-- </form> -->
+                  </ng-template>
+                </mat-tab>
+              </mat-tab-group>
+
+              <!--=====|BUTTON|=====-->
+              <div class="d-flex justify-content-end ">
+                <button mat-raised-button type="button" [hidden]="!permission.isAdd" [disabled]="userForm.invalid"
+                  (click)="onClick_Save()" class="btn btn-primary btn-sm">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

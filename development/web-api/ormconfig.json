@@ -1,0 +1,57 @@
+[{
+      "type": "mysql",
+      "host": "134.209.99.181",
+      "port": 3306,
+      "username": "devuser",
+      "password": "password",
+      "database": "CKSNDB_UAT",
+      "synchronize": false,
+      "logging": true,
+      "pool": {
+         "min": 30,
+         "max": 1000
+      },
+      "entities": [
+         "dist/orm/**/*.js"
+      ],
+      "migrations": [
+         "lib/orm/migration/*.ts"
+      ],
+      "subscribers": [
+         "lib/orm/subscriber/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "lib/orm/entity",
+         "migrationsDir": "lib/orm/migration",
+         "subscribersDir": "lib/orm/subscriber"
+      }
+   },
+   {
+      "type": "mysql",
+      "host": "134.209.99.181",
+      "port": 3306,
+      "username": "devuser",
+      "password": "password",
+      "database": "CKSNDB_UAT",
+      "synchronize": false,
+      "logging": true,
+      "pool": {
+         "min": 30,
+         "max": 1000
+      },
+      "entities": [
+         "orm/entity/*.js"
+      ],
+      "migrations": [
+         "lib/orm/migration/*.ts"
+      ],
+      "subscribers": [
+         "lib/orm/subscriber/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "lib/orm/entity",
+         "migrationsDir": "lib/orm/migration",
+         "subscribersDir": "lib/orm/subscriber"
+      }
+   }
+]

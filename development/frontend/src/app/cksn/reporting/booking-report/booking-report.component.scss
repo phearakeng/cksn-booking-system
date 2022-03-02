@@ -1,0 +1,158 @@
+th {
+  font-size: 13px !important;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 150px auto;
+  padding: 20px;
+  background: #fff;
+  border-style: solid;
+  border-color: #259ff5;
+  border-radius: 20px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.popup .close:hover {
+  color: #06D85F;
+}
+
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px) {
+  .box {
+    width: 70%;
+  }
+
+  .popup {
+    width: 70%;
+  }
+}
+
+
+.customerName {
+  margin-bottom: 0rem;
+}
+
+.place,
+phone {
+  margin-bottom: 0rem;
+  color: grey;
+  font-size: 12px;
+}
+
+.placeIconSize {
+  font-size: 14px !important;
+}
+
+.phoneIconSize {
+  font-size: 14px !important;
+}
+
+table {
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.tbl-container {
+  height: 500px;
+  overflow: auto;
+}
+
+.colwidth {
+  width: 10px;
+}
+
+.link {
+  cursor: pointer;
+
+}
+
+.link:hover {
+  color: blue;
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+
+.cdk-overlay-container {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.truncate-cell {
+  max-width: 100px;
+  /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-pills .nav-item .nav-link {
+  border-radius: 10px;
+}
+
+.nav-pills .nav-item .nav-link.active {
+  color: #fff;
+  background-color: #14c5e0;
+  box-shadow: 0 4px 20px 0 rgb(0 0 0 / 14%), 0 7px 10px -5px rgb(156 39 176 / 40%);
+  border-radius: 10px;
+}

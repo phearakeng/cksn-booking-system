@@ -1,0 +1,77 @@
+.customerName {
+  margin-bottom: 0rem;
+}
+
+.place,
+phone {
+  margin-bottom: 0rem;
+  color: grey;
+  font-size: 12px;
+}
+
+.placeIconSize {
+  font-size: 14px !important;
+}
+
+.phoneIconSize {
+  font-size: 14px !important;
+}
+
+table {
+  width: 100%;
+
+}
+
+mat-header-cell {
+  background: #18d1de;
+  text-transform: uppercase;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+
+.link {
+  cursor: pointer;
+
+}
+
+.link:hover {
+  color: blue;
+}
+
+mat-cell {
+  font-weight: 400;
+}
+
+
+.cdk-overlay-container {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+
+.truncate-cell {
+  max-width: 100px;
+  /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,25 @@
+@media screen and (max-height: 1000px) {
+  .tbl-container {
+    height: 600px;
+    overflow: auto;
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .tbl-container {
+    height: 425px;
+    overflow: auto;
+  }
+}
+
+th {
+  background: #18d1de;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+mat-cell,
+td {
+  font-weight: 400;
+}

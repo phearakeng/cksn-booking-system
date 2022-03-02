@@ -1,0 +1,126 @@
+From 96732090bd515e4a2455b06f524281455fee111f Mon Sep 17 00:00:00 2001
+From: Chhen Rina <chhenrina@gmail.com>
+Date: Sun, 19 Dec 2021 12:38:52 +0700
+Subject: [PATCH] update container filter
+
+---
+ lib/controller/container.controller.ts     |  8 ++--
+ lib/orm/repository/container.repository.ts | 48 ++++++++++++++--------
+ 2 files changed, 35 insertions(+), 21 deletions(-)
+
+diff --git a/lib/controller/container.controller.ts b/lib/controller/container.controller.ts
+index 83b9a36..fb0d9a7 100644
+--- a/lib/controller/container.controller.ts
++++ b/lib/controller/container.controller.ts
+@@ -78,8 +78,8 @@ export class ContainerController extends baseController{
+         let toDate = req.body.toDate
+         let groupID = req.body.groupID
+         let userID = req.body.userID
+-          console.log(req.body)
+-        getCustomRepository(ContainerRepository).getListCotainters(pageIndex,pageSize,containerStatusID,fromDate,toDate,userID,groupID).then(
++        let isViewAll = req.body.isViewAll
++        getCustomRepository(ContainerRepository).getListCotainters(pageIndex,pageSize,containerStatusID,fromDate,toDate,userID,groupID,isViewAll).then(
+             qb =>{res.send(qb)}
+         ) 
+      })
+@@ -133,7 +133,9 @@ export class ContainerController extends baseController{
+         let userID = req.body.userID
+         let fromDate = req.body.fromDate
+         let toDate = req.body.toDate
+-        getCustomRepository(ContainerRepository).getCountContainers(containerStatusID,userID,groupID,fromDate,toDate).then(
++        let isViewAll = req.body.isViewAll
++        console.log(req.body)
++        getCustomRepository(ContainerRepository).getCountContainers(containerStatusID,userID,groupID,fromDate,toDate,isViewAll).then(
+             qb =>{res.send(qb)}
+         ) 
+      })
+diff --git a/lib/orm/repository/container.repository.ts b/lib/orm/repository/container.repository.ts
+index b9a0aa1..4d1d4b8 100644
+--- a/lib/orm/repository/container.repository.ts
++++ b/lib/orm/repository/container.repository.ts
+@@ -123,7 +123,7 @@ export class ContainerRepository extends Repository<Container>
+     * @param pageSize 
+     * @param bookingStatusID
+     */
+-    getListCotainters(pageIndex, pageSize, containerStatusID, fromDate, toDate, userID, groupID): Promise<any> {
++    getListCotainters(pageIndex, pageSize, containerStatusID, fromDate, toDate, userID, groupID,isViewAll): Promise<any> {
+         let resBody: ResponseBody<any> = new ResponseBody()
+         try {
+ 
+@@ -141,17 +141,23 @@ export class ContainerRepository extends Repository<Container>
+                 .orderBy("booking.ID", "DESC")
+                 .skip(pageIndex)
+                 .take(pageSize)
+-                .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
++                .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and :isViewAll = false)",
++                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "isViewAll": isViewAll })
+ 
+-                .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)  ",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
++                .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and :isViewAll=true)  ",
++                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "isViewAll": isViewAll })
++               
++                // .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
+ 
+-                .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and container.isActive=1 and booking.isActive=1 and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++                // .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)  ",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
+ 
+-                .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and  (date(container.pickUpDate)  >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++                // .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and container.isActive=1 and booking.isActive=1 and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++
++                // .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and  (date(container.pickUpDate)  >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
+ 
+                 .getMany()
+                 .then(x => {
+@@ -179,7 +185,7 @@ export class ContainerRepository extends Repository<Container>
+     /**
+     * @@method getCountContainers
+     */
+-    getCountContainers(containerStatusID, userID, groupID, fromDate, toDate): Promise<any> {
++    getCountContainers(containerStatusID, userID, groupID, fromDate, toDate,isViewAll): Promise<any> {
+ 
+         try {
+             //  if(containerStatusID!=0){
+@@ -189,18 +195,24 @@ export class ContainerRepository extends Repository<Container>
+                 //    .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.isActive=1 and booking.isActive=1 and 0 = :containerStatusID  and booking.operationID = :userID and (container.pickUpDate >= :fromDate and container.pickUpDate <= :toDate)  and 3 <> :groupID)",{containerStatusID:containerStatusID,userID:userID,"fromDate":fromDate,"toDate":toDate,"groupID":groupID})
+                 //   .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.isActive=1 and booking.isActive=1 and container.containerStatusID = :containerStatusID and :groupID=3 and (container.pickUpDate >= :fromDate and container.pickUpDate <= :toDate))",{containerStatusID:containerStatusID,groupID:groupID,"fromDate":fromDate,"toDate":toDate})
+                 //   .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.isActive=1 and booking.isActive=1 and 0 = :containerStatusID and :groupID=3 and (container.pickUpDate >= :fromDate and container.pickUpDate <= :toDate)) ",{containerStatusID:containerStatusID,groupID:groupID,"fromDate":fromDate,"toDate":toDate})
++             .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and :isViewAll = false)",
++                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "isViewAll": isViewAll })
+ 
+-                .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
++                .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and :isViewAll=true)  ",
++                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "isViewAll": isViewAll })
++                
++                    // .where("((container.pickUpDate is not null and container.deliveryDate is not null) and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
+ 
+-                .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)  ",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
++                // .orWhere("((container.pickUpDate is not null and  container.deliveryDate is not null)  and  :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and booking.operationID = :userID and (container.pickUpDate >= :fromDate and date(container.pickUpDate) <= :toDate) and 3 <> :groupID)  ",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "userID": userID, "groupID": groupID })
+ 
+-                .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and container.isActive=1 and booking.isActive=1 and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++                // .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and container.containerStatusID = :containerStatusID and container.isActive=1 and booking.isActive=1 and container.isActive=1 and booking.isActive=1 and (date(container.pickUpDate) >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
+ 
+-                .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and  (date(container.pickUpDate)  >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
+-                    { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++                // .orWhere("(container.pickUpDate is not null and container.deliveryDate is not null and :containerStatusID = 0 and container.isActive=1 and booking.isActive=1 and  (date(container.pickUpDate)  >= :fromDate and date(container.pickUpDate) <= :toDate) and 3=:groupID)",
++                //     { "containerStatusID": containerStatusID, "fromDate": fromDate, "toDate": toDate, "groupID": groupID })
++                
+                 .getCount().then(
+                     x => {
+                         let res: ResponseBody<any> = new ResponseBody()
+-- 
+2.24.2 (Apple Git-127)
+

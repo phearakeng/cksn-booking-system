@@ -1,0 +1,541 @@
+<div class="main-content" [hidden]="!permission.isView">
+  <div class="container-fluid">
+    <div class="card">
+      <form [formGroup]="bookingDetailForm">
+        <div class="card-body" [hidden]="!invisbleLoading">
+          <mat-progress-bar [hidden]="!isSaving" mode="indeterminate"></mat-progress-bar>
+          <div class="d-flex justify-content-start">
+            <div>
+              <h4 class="subHeaderTitle text-info font-weight-bold">BOOKING FORM</h4>
+            </div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon class="text-info font-weight-bold mb-2">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button (click)="onClick_save()" [disabled]="!permission.isAdd" mat-menu-item>
+                  <mat-icon>save</mat-icon><strong class="text-info">Save</strong>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <mat-tab-group>
+            <!--==========|*BOOKING DETAIL*|==========-->
+            <mat-tab mat-align-tabs="start">
+              <ng-template mat-tab-label>
+                <span class="text-success">BOOKING DETAIL</span>
+              </ng-template>
+              <mat-accordion [multi]="true">
+
+                <div class="row ml-4 mt-4">
+                  <div class="col-md-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label class="text-info font-weight-normal">FILE TYPE</mat-label>
+                      <mat-select [(ngModel)]="cksnFileFormat" formControlName="cksnFileType"
+                        (selectionChange)="onCKSNFileType_Change($event.value)" name="cksnFileType">
+                        <mat-option *ngFor="let fileType of cksnFileExtFormatList" [(value)]="fileType.ID">
+                          {{fileType.value}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field>
+                      <mat-label class="text-info font-weight-normal">BOOKING FILE</mat-label>
+                      <mat-icon matSuffix>file_copy</mat-icon>
+                      <input [(ngModel)]="CKSNFile" formControlName="CKSNFile" matInput class="text-success">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <!--==========|*BOOKING DETAIL*|==========-->
+
+
+                <!--==========|*CUSTOMER DETAIL*|==========-->
+                <mat-expansion-panel class="nav-pills" [expanded]="false">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="text-info">
+                      Customer Detail
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <customer-tag customerType="87" #viewCust (onValueChange)="onCustValueChange($event[0],$event[1])">
+                  </customer-tag>
+                </mat-expansion-panel>
+                <!--========|*END CUSTOMER DETAIL*|========-->
+
+
+                <!--===========|*EXPOERTER / SHIPPER/SELLER DETAIL*|===========-->
+                <mat-expansion-panel class="nav-pills">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="text-info">
+                      Exporter / Shipper / Seller Detail
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <customer-tag customerType="84" #viewExpShSel
+                    (onValueChange)="onCustValueChange($event[0],$event[1])"></customer-tag>
+                </mat-expansion-panel>
+                <!--========|*END EXPOERTER / SHIPPER / SELLER DETAIL*|========-->
+
+
+                <!--==========|*NOTIFY PARTY DETAIL*|==========-->
+                <mat-expansion-panel class="nav-pills">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="text-info">
+                      Notify Party Detail
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <customer-tag customerType="86" #viewNotifyParty
+                    (onValueChange)="onCustValueChange($event[0],$event[1])"></customer-tag>
+                </mat-expansion-panel>
+                <!--========|*END NOTIFY PARTY DETAIL*|========-->
+
+
+                <!--==========|*CONSIGNEE DETAIL*|==========-->
+                <mat-expansion-panel class="nav-pills">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="text-info">
+                      Consignee Detail
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <customer-tag customerType="85" #viewConsignee
+                    (onValueChange)="onCustValueChange($event[0],$event[1])">
+                  </customer-tag>
+                </mat-expansion-panel>
+                <!--========|*END CONSIGNEE DETAIL*|========-->
+
+
+                <!--==========|*SHIPMENT DETAIL*|==========-->
+                <mat-expansion-panel class="nav-pills">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="text-info">
+                      Shipment Information
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="m-1" style="padding: 0 !important;">
+
+                    <!--==========|*DATA PAST*|==========-->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">MBL NO</mat-label>
+                          <mat-icon matSuffix>ballot</mat-icon>
+                          <input matInput [(ngModel)]="booking.mbl" formControlName="BLNo" class="text-success">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">HBL NO</mat-label>
+                          <mat-icon matSuffix>ballot</mat-icon>
+                          <input matInput [(ngModel)]="booking.hbl" formControlName="HBLNo" class="text-success">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Carrier</mat-label>
+                          <mat-icon matSuffix>car</mat-icon>
+                          <input type="text" formControlName="carrier" aria-label="carrier" class="text-success"
+                            matInput [matAutocomplete]="autocompleteCarrier">
+                          <mat-autocomplete #autocompleteCarrier="matAutocomplete" [displayWith]="displayFnCarrier"
+                            (optionSelected)="onSelectionCarrierChanged($event)">
+                            <mat-option *ngFor="let carrier of filteredCarrier | async" [value]="carrier">
+                              {{carrier.name}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Overseas Agent</mat-label>
+                          <mat-icon matSuffix>contacts</mat-icon>
+                          <input type="text" formControlName="agent" aria-label="Agent" class="text-success" matInput
+                            [matAutocomplete]="autoCompleteAgent">
+                          <mat-autocomplete #autoCompleteAgent="matAutocomplete" [displayWith]="displayFnAgent"
+                            (optionSelected)="onSelectionAgentChanged($event)">
+                            <mat-option *ngFor="let agent of filteredbusinessPartner | async" [value]="agent">
+                              {{agent.name +' - Company '+agent.company}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!--==========|*TABLE OF DATA PAST*|==========-->
+                    <div class="tbContainer">
+                      <container-tag [dataSource]="booking.container"></container-tag>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Dimension</mat-label>
+                          <mat-icon matSuffix>vibration</mat-icon>
+                          <input matInput [(ngModel)]="booking.dimension" formControlName="dimension"
+                            class="text-success">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Shipping Mode</mat-label>
+                          <mat-select [(ngModel)]="booking.modeID" formControlName="mode" name="mode">
+                            <mat-option *ngFor="let mode of modeList" [value]="mode.ID">{{mode.value}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">Incoterm</mat-label>
+                          <mat-select [(ngModel)]="booking.incotermID" formControlName="incoterm" name="Incoterm">
+                            <mat-option *ngFor="let incoterm of incotermList" [value]="incoterm.ID">{{incoterm.value}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Commodity</mat-label>
+                          <mat-icon matSuffix>local_grocery_store</mat-icon>
+                          <input type="text" matInput [(ngModel)]="booking.commodity" formControlName="commodity"
+                            class="text-success">
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Broker</mat-label>
+                          <mat-icon matSuffix>contacts</mat-icon>
+                          <input type="text" formControlName="broker" aria-label="Broker" matInput
+                            [matAutocomplete]="autoBroker">
+                          <mat-autocomplete #autoBroker="matAutocomplete" [displayWith]="displayFnBroker"
+                            (optionSelected)="onSelectionBrokerChanged($event)">
+                            <mat-option *ngFor="let broker of filteredBroker | async" [value]="broker">
+                              <!-- {{broker.lastName + " "+broker.firstName}} -->
+                              {{broker.name}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Selling Rate</mat-label>
+                          <mat-icon matSuffix>attach_money</mat-icon>
+                          <input matInput formControlName="selling" class="text-success" [(ngModel)]="booking.selling">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Port of Loading (POL)</mat-label>
+                          <mat-icon matSuffix>directions_boat</mat-icon>
+                          <input type="text" formControlName="pol" aria-label="pol" matInput [matAutocomplete]="autoPOL"
+                            class="text-success">
+                          <mat-autocomplete #autoPOL="matAutocomplete" [displayWith]="displayFnPOL"
+                            (optionSelected)="onSelectionPOLChanged($event)">
+                            <mat-option *ngFor="let port of filteredPOL| async" [value]="port">
+                              {{port.port + "("+port.code+")"}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field class="w-100 mr-1">
+                          <mat-label class="text-info font-weight-normal">ETD POL</mat-label>
+                          <input [(ngModel)]="booking.etdPOL" (focus)="etdPOLpicker.open()" formControlName="etdPOL"
+                            name="etdPOL" matInput [matDatepicker]="etdPOLpicker" class="text-success">
+                          <mat-datepicker-toggle matSuffix [for]="etdPOLpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #etdPOLpicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Port of Discharge (POD)</mat-label>
+                          <mat-icon matSuffix>location_on</mat-icon>
+                          <input type="text" formControlName="pod" aria-label="pod" matInput [matAutocomplete]="autoPOD"
+                            class="text-success">
+                          <mat-autocomplete #autoPOD="matAutocomplete" [displayWith]="displayFnPOD"
+                            (optionSelected)="onSelectionPODChanged($event)">
+                            <mat-option *ngFor="let port of filteredPOD| async" [value]="port">
+                              {{port.port + "("+port.code+")"}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field class="w-100 mr-1">
+                          <mat-label class="text-info font-weight-normal">ETA POD</mat-label>
+                          <input [(ngModel)]="booking.etaPOD" (focus)="ETAPODpicker.open()" formControlName="etaPOD"
+                            (dateChange)="onDateEtaPODChange()" name="etaPOD" matInput class="text-success"
+                            [matDatepicker]="ETAPODpicker">
+                          <mat-datepicker-toggle matSuffix [for]="ETAPODpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #ETAPODpicker>
+                          </mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label class="text-info font-weight-normal">Border</mat-label>
+                          <mat-select [(ngModel)]="booking.borderID" formControlName="border" name="border"
+                            class="text-success">
+                            <mat-option *ngFor="let border of borderList" [(value)]="border.ID">{{border.value}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">ETA Border</mat-label>
+                          <input id="etaBorder" name="etaBorder" (focus)="etaBorderpicker.open()"
+                            [(ngModel)]="booking.ETABorder" formControlName="etaBorder" class="text-success" matInput
+                            [matDatepicker]="etaBorderpicker">
+                          <mat-datepicker-toggle matSuffix [for]="etaBorderpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #etaBorderpicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Final Destination</mat-label>
+                          <mat-icon matSuffix>pin_drop</mat-icon>
+                          <input matInput [(ngModel)]="booking.finalDestination" formControlName="distination"
+                            class="text-success">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field class="w-100 mr-1">
+                          <mat-label class="text-info font-weight-normal">ETA Destination</mat-label>
+                          <input [(ngModel)]="booking.etaDestination" (focus)="etaDestinationpicker.open()"
+                            formControlName="etaDestination" name="etaDestination" class="text-success" matInput
+                            [matDatepicker]="etaDestinationpicker">
+                          <mat-datepicker-toggle matSuffix [for]="etaDestinationpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #etaDestinationpicker>
+                          </mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-label class="text-info font-weight-normal">Demurrage</mat-label>
+                          <mat-icon matSuffix>attach_money</mat-icon>
+                          <input class="w-100" [(ngModel)]="booking.dem" class="text-success"
+                            (input)="onDemurrageChange($event.target.value)" formControlName="dem" matInput>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">Dem Due</mat-label>
+                          <input id="demDue" [(ngModel)]="booking.demDue" (dateChange)="onDateDemDueChange()"
+                            (focus)="demDueDatepicker.open()" formControlName="demDue" name="demDue" matInput
+                            [matDatepicker]="demDueDatepicker" class="text-success">
+                          <mat-datepicker-toggle matSuffix [for]="demDueDatepicker"></mat-datepicker-toggle>
+                          <mat-datepicker #demDueDatepicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-checkbox [(ngModel)]="booking.combileDetWithDem" (change)="onCheckCombileChange($event)"
+                          formControlName="combileDetWithDem">With Detention</mat-checkbox>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">Detention</mat-label>
+                          <mat-icon matSuffix>sync_problem</mat-icon>
+                          <input class="w-100" matInput [(ngModel)]="booking.det"
+                            (input)="onDetentionChange($event.target.value)" formControlName="det" class="text-success">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label class="text-info font-weight-normal">Det Due</mat-label>
+                          <input id="dateDetDue" name="dateDetDue" (focus)="dateDetDueDatepicker.open()"
+                            formControlName="dateDetDue" [(ngModel)]="booking.detDue" matInput
+                            [matDatepicker]="dateDetDueDatepicker" class="text-success">
+                          <mat-datepicker-toggle matSuffix [for]="dateDetDueDatepicker"></mat-datepicker-toggle>
+                          <mat-datepicker #dateDetDueDatepicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <mat-form-field class="w-100">
+                      <mat-label class="text-info font-weight-normal">Clearance</mat-label>
+                      <input formControlName="clearance" [(ngModel)]="booking.clearance"
+                        (focus)="clearancepicker.open()" name="clearance" matInput class="text-success"
+                        [matDatepicker]="clearancepicker">
+                      <mat-datepicker-toggle matSuffix [for]="clearancepicker"></mat-datepicker-toggle>
+                      <mat-datepicker #clearancepicker></mat-datepicker>
+                    </mat-form-field>
+
+                  </div>
+                </mat-expansion-panel>
+                <!--========|*END SHIPMENT DETAIL*|========-->
+
+              </mat-accordion>
+            </mat-tab>
+
+
+            <!--========|*SHIPPING DOCUMENT*|========-->
+            <mat-tab class="text-primary">
+              <ng-template mat-tab-label>
+                <span class="text-success">SHIPPING DOCUMENT</span>
+              </ng-template>
+              <mat-expansion-panel [expanded]="true">
+                <div class="m-1">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100  ml-1">
+                        <mat-label class="text-info font-weight-normal">Document Submit</mat-label>
+                        <input id="docSubmit" class="text-success" formControlName="docSubmitDate"
+                          (focus)="docSubmitDatepicker.open()" [(ngModel)]="booking.docSubmitDate" name="docSubmit"
+                          matInput [matDatepicker]="docSubmitDatepicker">
+                        <mat-datepicker-toggle matSuffix [for]="docSubmitDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #docSubmitDatepicker></mat-datepicker>
+                      </mat-form-field>
+                      <mat-form-field class="w-100  ml-1">
+                        <mat-label class="text-info font-weight-normal">Document Release</mat-label>
+                        <input id="docRLS" class="text-success" formControlName="docRLSDate"
+                          (focus)="docRLSDatepicker.open()" name="docRLS" [(ngModel)]="booking.docRLSDate" matInput
+                          [matDatepicker]="docRLSDatepicker">
+                        <mat-datepicker-toggle matSuffix [for]="docRLSDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #docRLSDatepicker></mat-datepicker>
+                      </mat-form-field>
+                      <mat-form-field class="w-100  ml-1">
+                        <mat-label class="text-info font-weight-normal">Document to Broker</mat-label>
+                        <input id="docBroker" class="text-success" formControlName="docBrokerDate"
+                          (focus)="docBrokerDatepicker.open()" [(ngModel)]="booking.docBrokerDate" name="docBroker"
+                          matInput [matDatepicker]="docBrokerDatepicker">
+                        <mat-datepicker-toggle matSuffix [for]="docBrokerDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #docBrokerDatepicker></mat-datepicker>
+                      </mat-form-field>
+                      <div class="d-flex justify-content-end">
+                        <button mat-raised-button color="primary" (click)="onClick_browseFile($event)">
+                          <mat-icon>add</mat-icon>
+                          Add Documentation
+                        </button>
+                        <input #fileUpload type="file" class="input_fileupload--hidden" (input)="onInput($event)"
+                          multiple (change)="onFileSelected($event)">
+                        <!-- [accept]="accept" -->
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="table-responsive documentContainer">
+                        <div class="loader" [hidden]="invisbleImageLoading">
+                          <svg class="circular" viewBox="25 25 50 50">
+                            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2"
+                              stroke-miterlimit="10" />
+                          </svg>
+                        </div>
+                        <table [hidden]="!invisbleImageLoading" class="table table-striped">
+                          <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">File</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let doc of documents">
+                              <!-- <td><img mat-card-image  style="width: 70px !important;height: 70px !important;"  [src]="'data:image/'+doc.ext+';base64,'+doc.file" alt="Unknow source"></td> -->
+                              <td><a (click)="onClick_ViewFile(doc)">{{doc.fileName}}</a></td>
+                              <td><button (click)="onClick_deleteDocument(doc)" class="btn btn-danger btn-sm"> <i
+                                    class="material-icons">delete</i></button></td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-tab>
+            <!--========|*END SHIPPING DOCUMENT*|========-->
+
+
+            <!--========|*BILL INFOMATION*|========-->
+            <mat-tab class="text-primary">
+              <ng-template mat-tab-label>
+                <span class="text-success">BILL INFOMATION</span>
+              </ng-template>
+              <mat-expansion-panel [expanded]="true">
+                <div class="mt-4">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label class="text-info font-weight-normal">Bill Type</mat-label>
+                        <mat-select [(ngModel)]="booking.billTypeID" formControlName="billType" name="status">
+                          <mat-option *ngFor="let billType of billTypeList" [value]="billType.ID" class="text-success">
+                            {{billType.value}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label class="text-info font-weight-normal">Contract No</mat-label>
+                        <input matInput [(ngModel)]="booking.contractNo" formControlName="contractNo"
+                          class="text-success">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label class="text-info font-weight-normal">Date Issue</mat-label>
+                        <input id="dateIssue" class="text-success" [(ngModel)]="booking.dateIssue"
+                          (focus)="dateIssueDatepicker.open()" name="dateIssue" formControlName="dateIssue" matInput
+                          [matDatepicker]="dateIssueDatepicker">
+                        <mat-datepicker-toggle matSuffix [for]="dateIssueDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateIssueDatepicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label class="text-info font-weight-normal">Remark</mat-label>
+                        <textarea matInput [(ngModel)]="booking.remarks" formControlName="remark" class="text-success"
+                          cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-tab>
+            <!--========|*END BILL INFOMATION*|========-->
+
+
+          </mat-tab-group>
+          <div class="d-flex justify-content-end ">
+            <div *ngIf="isModify">
+              <button mat-raised-button type="button" (click)="onClick_save()" [disabled]="!isModify"
+                class="btn btn-info btn-sm">
+                Save
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <div class="loader" [hidden]="invisbleLoading">
+          <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+          </svg>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

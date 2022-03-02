@@ -1,0 +1,54 @@
+<form>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field>
+        <mat-label class="text-info font-weight-normal">Customer</mat-label>
+        <mat-icon matSuffix style="color: #0BC6DD; font-size: 23px;">perm_identity</mat-icon>
+        <input type="text" class="text-success" aria-label="Assignee" [formControl]="custCtrl" matInput
+          [matAutocomplete]="autoCustomer">
+        <mat-autocomplete #autoCustomer="matAutocomplete" [displayWith]="displayCustomer"
+          (optionSelected)="onSelectionCustomerChanged($event)">
+          <mat-option *ngFor="let customer of filteredCustomer | async" [value]="customer">
+            {{customer.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-6">
+      <mat-form-field class="w-100">
+        <mat-label class="text-info font-weight-normal">VAT</mat-label>
+        <mat-icon matSuffix style="color: #0BC6DD; font-size: 23px;">format_list_numbered</mat-icon>
+        <input matInput [ngModel]="customer?.VATNo" [readonly]="true" name="vat" placeholder="VAT" class="text-success">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 mrl-0">
+      <mat-form-field class="w-100">
+        <mat-label class="text-info font-weight-normal">Telephone</mat-label>
+        <mat-icon matSuffix style="color: #0BC6DD; font-size: 23px;">phone</mat-icon>
+        <input matInput [ngModel]="customer?.telephone2" name="telephone" [readonly]="true" class="text-success">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-6 mrl-0">
+      <mat-form-field>
+        <mat-label class="text-info font-weight-normal">Email</mat-label>
+        <mat-icon matSuffix style="color: #0BC6DD; font-size: 23px;">email</mat-icon>
+        <input matInput [ngModel]="customer?.email2" name="email" [readonly]="true" class="text-success">
+      </mat-form-field>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-12 mrl-0">
+      <mat-form-field class="w-100">
+        <mat-label class="text-info font-weight-normal">Address</mat-label>
+        <mat-icon matSuffix style="color: #0BC6DD; font-size: 23px;">place</mat-icon>
+        <input matInput name='addr' value="{{customer?customer.address1+' '+ customer.city+' '+customer.country:''}}"
+          [readonly]="true" class="text-success">
+      </mat-form-field>
+    </div>
+  </div>
+</form>
